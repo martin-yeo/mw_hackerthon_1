@@ -1,0 +1,3 @@
+.logo{width:200px}
+.txt-menu{color:var(--mdc-theme-on-surface, #000)!important}
+.header{position:fixed;display:flex;width:100%;background-color:var(--mdc-theme-background);z-index:1}

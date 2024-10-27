@@ -1,0 +1,9 @@
+{
+  "extends": "@tsconfig/svelte/tsconfig.json",
+
+  "include": ["src/main/webapp/svelte/**/*.ts"],
+  "exclude": ["node_modules/*", "__sapper__/*", "src/main/resources/static/*"],
+  "compilerOptions": {
+    "typeRoots": ["./node_modules/@types", "./src/main/webapp/svelte/admin/types", "./src/main/webapp/svelte/front/types", "./src/main/webapp/svelte/manager/types"]
+  }
+}
