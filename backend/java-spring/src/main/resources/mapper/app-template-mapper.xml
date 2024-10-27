@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.ac.mokwon.javaspring.web.app.template.dao.AppTemplateDAO">
+	<select id="selectTemplateList" parameterType="Map" resultType="Map">
+        <!-- SELECT 쿼리문 작성 -->
+		SELECT
+		  FROM
+		 WHERE
+	</select>
+
+	<select id="selectOneTemplate" parameterType="Map" resultType="Map">
+        <!-- SELECT 쿼리문 작성 -->
+		SELECT
+		  FROM
+		 WHERE
+	</select>
+
+
+	<insert id="insertTemplateData" parameterType="Map">
+		<!-- Insert 쿼리문 작성 -->
+		INSERT INTO
+		VALUES
+	</insert>
+
+	<update id="updateTemplateData" parameterType="Map">
+		<!-- Update 쿼리문 작성 -->
+		UPDATE
+		   SET
+		 WHERE
+	</update>
+
+	<delete id="deleteTemplateData" parameterType="Map">
+		<!-- Delete 쿼리문 작성 -->
+		DELETE
+		  FROM
+		 WHERE
+	</delete>
+</mapper>
