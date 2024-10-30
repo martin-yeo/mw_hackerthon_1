@@ -10,7 +10,7 @@
 
 	<select id="selectOneTemplate" parameterType="Map" resultType="Map">
         <!-- SELECT 쿼리문 작성 -->
-		SELECT *
+		SELECT `num`, `name`
 		  FROM test
 		 WHERE num = #{num}
 	</select>
