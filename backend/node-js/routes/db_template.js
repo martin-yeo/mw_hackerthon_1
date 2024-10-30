@@ -24,21 +24,33 @@ router.get('/list', async (req, res) => {
         const [rows] = await connection.execute('SELECT * FROM test');
         await connection.end();
 
-        res.json({ result: true, data: rows });
+        res.json({ result: true, list: rows });
     } catch (error) {
         res.status(500).json({ result: false, message: 'Error fetching data', error: error.message });
     }
 });
 
 router.post('/list', async (req, res) => {
+    try {
+        const connection = await createConnection();
+        const [rows] = await connection.execute('SELECT * FROM test');
+        await connection.end();
+
+        res.json({ result: true, list: rows });
+    } catch (error) {
+        res.status(500).json({ result: false, message: 'Error fetching data', error: error.message });
+    }
+});
+
+router.post('/one/:num', async (req, res) => {
     const { num } = req.body; // 파라미터를 JSON Object로 변환
 
     try {
         const connection = await createConnection();
-        const [rows] = await connection.execute('SELECT * FROM test WHERE num = ?', [num]);
+        const [data] = await connection.execute('SELECT * FROM test WHERE num = ?', [num]);
         await connection.end();
 
-        res.json({ result: true, data: rows });
+        res.json({ result: true, data: data[0] });
     } catch (error) {
         res.status(500).json({ result: false, message: 'Error fetching data', error: error.message });
     }
@@ -47,11 +59,11 @@ router.post('/list', async (req, res) => {
 
 // 2. POST /create - 데이터 삽입
 router.post('/insert', async (req, res) => {
-    const { value } = req.body; // 파라미터를 JSON Object로 변환
+    const { name } = req.body; // 파라미터를 JSON Object로 변환
     
     try {
         const connection = await createConnection();
-        const [result] = await connection.execute('INSERT INTO test (name) VALUES (?)', [value]);
+        const [result] = await connection.execute('INSERT INTO test (name) VALUES (?)', [name]);
         await connection.end();
 
         res.json({ result: true, message: 'Data inserted', insertId: result.insertId });
@@ -62,12 +74,12 @@ router.post('/insert', async (req, res) => {
 
 
 // 3. PUT /update/:id - 데이터 수정
-router.put('/update/:num', async (req, res) => {
-    const { num, value } = req.body;
+router.put('/update', async (req, res) => {
+    const { num, name } = req.body;
 
     try {
         const connection = await createConnection();
-        await connection.execute('UPDATE test SET name = ? WHERE num = ?', [value, num]);
+        await connection.execute('UPDATE test SET name = ? WHERE num = ?', [name, num]);
         await connection.end();
 
         res.json({ result: true, message: 'Data updated' });
@@ -78,8 +90,8 @@ router.put('/update/:num', async (req, res) => {
 
 
 // 4. DELETE /delete/:id - 데이터 삭제
-router.delete('/delete/:num', async (req, res) => {
-    const { num } = req.params;
+router.delete('/delete', async (req, res) => {
+    const { num } = req.body;
 
     try {
         const connection = await createConnection();
