@@ -26,7 +26,7 @@ SECRET_KEY = 'u3v%u^6ko%(7pi2iz*eki3!22#=l^dbk&t-b1p0p5zs3at)l@5'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = [] #'14.5.23.177'
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'backend.api',
     'django_user_agents',
-    'django_crontab'
 ]
 
 MIDDLEWARE = [
@@ -85,14 +84,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     },
-    'itpe': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'itpe.db',
-    }
 }
-
-DATABASE_ROUTERS = ['itpe.db.DatabaseAppsRouter']
-DATABASE_APPS_MAPPING = {'itpe': 'itpe',}
 '''
 
 # Password validation
@@ -135,7 +127,3 @@ STATICFILES_DIRS = [
 ]
 #STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 USER_AGENTS_CACHE = 'default'
-
-CRONJOBS = [
-    ('0 * * * *', 'backend.cron.naver_cron.crontest', '>> '+os.path.join(BASE_DIR, 'backend/cron/cron.log'))
-]

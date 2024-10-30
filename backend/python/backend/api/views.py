@@ -1,22 +1,12 @@
-from datetime import datetime, timedelta
-
-from dateutil.relativedelta import relativedelta
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from rest_framework import viewsets
-import json
 
 
 from .models import Message, MessageSerializer
-from ..keyword.crawl_naver_shopping_live import fetch_shopping_live_data, fetch_shopping_live_category, \
-    fetch_shopping_live_info, parse_code_shopping_live_code
-from ..keyword.shopping_trend_keyword import fetch_shopping_trend_keyword
-
-from ..nlp.extract_keyword import nlp_keyword
-from ..keyword.count_monthly_news_article import count_monthly_news_article
-from ..db.mysql_conn import mysql_get_conn, get_naver_confidential
+from ..db.mysql_conn import mysql_get_conn
 
 
 class MessageViewSet(viewsets.ModelViewSet):
@@ -27,129 +17,127 @@ class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
 
 
-# Serve Vue Application
+# Serve HTML File
 index_view = never_cache(TemplateView.as_view(template_name='index.html'))
 
 @csrf_exempt
-def health_check(request):
+def list(request):
+    # data = json.loads(request.body.decode('utf-8'))    # Application/JSON 방식으로 파라미터를 JSON 형태로 받을 경우 이렇게 파싱
+    # date = data['date']                                # 데이터를 가져와서 변수에 추가
+    # date = request.GET.get("date")                     # URL을 GET 방식으로 호출할 경우 이와 같은 방법으로 호출
     rtn_msg = {}
-    # print(data);
-    rtn_msg['result'] = True
+
+    try:
+        conn = mysql_get_conn()
+
+        with conn.cursor() as cursor:
+            # sql_select = "SELECT * FROM test WHERE num = %s"    # 테이블명 test와 num 부분 컬럼 변경 필요, 필요 시 * 을 컬럼 명으로 수정
+            # cursor.execute(sql_select, ('1'))                     # 숫자 1 부분을 request에서 데이터 가져온 값으로 수정
+            # result = cursor.fetchall()
+
+            sql_select = "SELECT * FROM test"    # 테이블명 test 변경 필요, 필요 시 * 을 컬럼 명으로 수정
+            print(sql_select)
+
+            cursor.execute(sql_select)                     # 숫자 1 부분을 request에서 데이터 가져온 값으로 수정
+            result = cursor.fetchall()
+
+
+            rtn_list = []
+            for row in result:
+                rtn_list.append(row)
+
+            rtn_msg['result'] = True
+            rtn_msg['list'] = rtn_list
+    except Exception as e:
+        print(e)
+        rtn_msg['result'] = False
+    finally:
+        # 연결 종료
+        conn.close()
+
+    return JsonResponse(rtn_msg, safe=False)
+
+@csrf_exempt
+def insert(request):
+    # data = json.loads(request.body.decode('utf-8'))    # Application/JSON 방식으로 파라미터를 JSON 형태로 받을 경우 이렇게 파싱
+    # date = data['date']                                # 데이터를 가져와서 변수에 추가
+    # date = request.GET.get("date")                     # URL을 GET 방식으로 호출할 경우 이와 같은 방법으로 호출
+    rtn_msg = {}
+
+    try:
+        conn = mysql_get_conn()
+
+        with conn.cursor() as cursor:
+            sql_insert = "INSERT INTO test (name) VALUES (%s)"    # 테이블명 test와 name 부분 컬럼 변경 필요
+            print(sql_insert)
+
+            cursor.execute(sql_insert, ('value1'))                # value 부분을 request에서 데이터 가져온 값으로 수정
+            conn.commit()  # 삽입 내용을 저장
+
+            rtn_msg['result'] = True
+    except Exception as e:
+        print(e)
+        rtn_msg['result'] = False
+    finally:
+        # 연결 종료
+        conn.close()
+
+
+    return JsonResponse(rtn_msg, safe=False)
+
+@csrf_exempt
+def update(request):
+    # data = json.loads(request.body.decode('utf-8'))    # Application/JSON 방식으로 파라미터를 JSON 형태로 받을 경우 이렇게 파싱
+    # date = data['date']                                # 데이터를 가져와서 변수에 추가
+    # date = request.GET.get("date")                     # URL을 GET 방식으로 호출할 경우 이와 같은 방법으로 호출
+    rtn_msg = {}
+
+    try:
+        conn = mysql_get_conn()
+
+        with conn.cursor() as cursor:
+            # 3. UPDATE - 데이터 수정
+            sql_update = "UPDATE test SET name = %s WHERE num = %s"    # 테이블명 test와 name, num 컬럼 부분 변경 필요
+            print(sql_update)
+
+            cursor.execute(sql_update, ('value2', 1))                  # value2와 숫자 1 부분을 request에서 데이터 가져온 값으로 수정
+            conn.commit()  # 수정 내용을 저장
+
+            rtn_msg['result'] = True
+    except Exception as e:
+        print(e)
+        rtn_msg['result'] = False
+    finally:
+        # 연결 종료
+        conn.close()
+
+    return JsonResponse(rtn_msg, safe=False)
+
+@csrf_exempt
+def delete(request):
+    # data = json.loads(request.body.decode('utf-8'))    # Application/JSON 방식으로 파라미터를 JSON 형태로 받을 경우 이렇게 파싱
+    # date = data['date']                                # 데이터를 가져와서 변수에 추가
+    # date = request.GET.get("date")                     # URL을 GET 방식으로 호출할 경우 이와 같은 방법으로 호출
+    rtn_msg = {}
+
+    try:
+        conn = mysql_get_conn()
+
+        with conn.cursor() as cursor:
+            sql_delete = "DELETE FROM test WHERE num = %s"    # 테이블명 test와 num 부분 컬럼 변경 필요
+            print(sql_delete)
+
+            cursor.execute(sql_delete, (1))                   # 숫자 1 부분을 request에서 데이터 가져온 값으로 수정
+            conn.commit()  # 삭제 내용을 저장
+
+            rtn_msg['result'] = True
+    except Exception as e:
+        print(e)
+        rtn_msg['result'] = False
+    finally:
+        # 연결 종료
+        conn.close()
 
     return JsonResponse(rtn_msg, safe=False)
 
 
-@csrf_exempt
-def extract_keyword(request):
-    rtn_msg = {}
-    data = json.loads(request.body.decode('utf-8'))
-    # print(data);
-    sentence = data['sentence']
-    # print(sentence)
-    result = nlp_keyword(sentence)
-
-    rtn_msg = result
-
-    return JsonResponse(rtn_msg, safe=False)
-
-# 월간 뉴스 카운팅 -> tmp. test
-@csrf_exempt
-def monthly_news_count(request):
-    conn = mysql_get_conn(False)
-    confidential = get_naver_confidential(conn)
-
-    client_id = confidential['naver_app_client_id']
-    client_secret = confidential['naver_app_client_secret']
-    query = request.GET.get("query")
-    start_date = request.GET.get("start_date")
-    end_date = request.GET.get("end_date")
-    # result = []
-
-    if start_date is not None:
-        print(start_date)
-        month_ago = datetime.strptime(start_date, '%Y%m%d')
-
-    if end_date is not None:
-        print(end_date)
-        today = datetime.strptime(end_date, '%Y%m%d')
-
-    if start_date is None and end_date is None:
-        today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
-        month = relativedelta(months=1)
-        month_ago = today - month
-
-    print(today)
-    print(month_ago)
-    de = today.strftime('%Y.%m.%d')
-
-    arr_ds = []
-    while month_ago <= today:
-        # print(month_ago)
-        # ds = month_ago.strftime('%Y.%m.%d')
-        arr_ds.append(month_ago)
-        # print(ds)
-        month_ago += timedelta(days=1)
-
-    print(arr_ds)
-
-    result = count_monthly_news_article(query, client_id, client_secret, arr_ds)
-
-    # print(result)
-    return JsonResponse(result, safe=False)
-
-
-# 카테고리별 쇼핑 -> tmp. test
-@csrf_exempt
-def shopping_trend_keyword(request):
-    conn = mysql_get_conn(False)
-    # result = []
-
-    # query = request.GET.get("query")
-    result = fetch_shopping_trend_keyword(conn)
-
-    # print(result)
-    return JsonResponse(result, safe=False)
-
-
-# 카테고리별 쇼핑 -> tmp. test
-@csrf_exempt
-def shopping_live_keyword(request):
-    # conn = mysql_get_conn(False)
-    # result = []
-
-    # query = request.GET.get("query")
-    result = fetch_shopping_live_data()
-
-    # print(result)
-    return JsonResponse(result, safe=False)
-
-@csrf_exempt
-def shopping_live_keyword_category(request):
-    # conn = mysql_get_conn(False)
-    # result = []
-
-    # query = request.GET.get("query")
-    result = fetch_shopping_live_category()
-
-    # print(result)
-    return JsonResponse(result, safe=False)
-
-
-@csrf_exempt
-def shopping_live_keyword_info(request):
-    conn = mysql_get_conn(False)
-    # result = []
-
-    # query = request.GET.get("query")
-    result = fetch_shopping_live_info(conn)
-
-    # print(result)
-    return JsonResponse(result, safe=False)
-
-@csrf_exempt
-def parse_shopping_live_category_code(request):
-    conn = mysql_get_conn(False)
-
-    result = parse_code_shopping_live_code(conn)
-
-    return JsonResponse(result, safe=False)
