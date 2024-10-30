@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/{path}") // URL 주소 표현 
+@RequestMapping("/api/front") // URL 주소 표현
 public class FrontTemplateController {
 
     @Autowired
@@ -29,7 +29,7 @@ public class FrontTemplateController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/detail", method=RequestMethod.POST)
+    @RequestMapping(value = "/one/{num}", method=RequestMethod.POST)
     public ResponseEntity<Object> templateDetail(
         @RequestBody HashMap<String, Object> dataMap
     ) {

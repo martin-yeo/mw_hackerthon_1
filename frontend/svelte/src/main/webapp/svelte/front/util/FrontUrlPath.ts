@@ -1,6 +1,6 @@
 class FrontUrlPath {
-    private frontApiPrefix = 'http://127.0.0.1:3000/api/front'; // api path 기입, nodejs 인 경우
-    // private frontApiPrefix = 'http://127.0.0.1:8000/api/front'; // api path 기입, python 인 경우
+    // private frontApiPrefix = 'http://127.0.0.1:3000/api/front'; // api path 기입, nodejs 인 경우
+    private frontApiPrefix = 'http://127.0.0.1:8000/api/front'; // api path 기입, python 인 경우
     // private frontApiPrefix = 'http://127.0.0.1:8080/api/front'; // api path 기입, java 인 경우
 
     public currentPath = '';

@@ -4,36 +4,35 @@
 <mapper namespace="kr.ac.mokwon.javaspring.web.front.template.dao.FrontTemplateDAO">
 	<select id="selectTemplateList" parameterType="Map" resultType="Map">
         <!-- SELECT 쿼리문 작성 -->
-		SELECT
-		  FROM
-		 WHERE
+		SELECT *
+		  FROM test
 	</select>
 
 	<select id="selectOneTemplate" parameterType="Map" resultType="Map">
         <!-- SELECT 쿼리문 작성 -->
-		SELECT
-		  FROM
-		 WHERE
+		SELECT *
+		  FROM test
+		 WHERE num = #{num}
 	</select>
 
 
 	<insert id="insertTemplateData" parameterType="Map">
 		<!-- Insert 쿼리문 작성 -->
-		INSERT INTO
-		VALUES
+		INSERT INTO test(`name`)
+		VALUES (#{name})
 	</insert>
 
 	<update id="updateTemplateData" parameterType="Map">
 		<!-- Update 쿼리문 작성 -->
-		UPDATE
-		   SET
-		 WHERE
+		UPDATE test
+		   SET `name` = #{name}
+		 WHERE num = #{num}
 	</update>
 
 	<delete id="deleteTemplateData" parameterType="Map">
 		<!-- Delete 쿼리문 작성 -->
 		DELETE
-		  FROM
-		 WHERE
+		  FROM test
+		 WHERE num = #{num}
 	</delete>
 </mapper>

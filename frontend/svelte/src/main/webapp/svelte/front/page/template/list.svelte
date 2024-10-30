@@ -2,6 +2,22 @@
 <style src="./style/list.css"/>
 
 <div class="row">
+    <div class="btn-container">
+        <Group>
+            <IconButton on:click={()=> (backToList())}>
+                <Icon color="primary" class="material-icons">
+                    <Icon component={Svg} viewBox="0 0 24 24">
+                        <path fill="currentColor" d={mdiArrowLeft} />
+                    </Icon>
+                </Icon>
+            </IconButton>
+        </Group>
+
+        <Group>
+
+        </Group>
+    </div>
+
     <div class="col">
         <DataTable sortable table$aria-label="User list" style="width: 100%;">
             <Head>

@@ -10,10 +10,14 @@ import Checkbox from '@smui/checkbox';
 import IconButton, {Icon as IconButtonIC} from '@smui/icon-button';
 import { Label, Icon } from '@smui/common';
 import Dialog, {Title as DialogTitle, Content as DialogContent, Actions} from '@smui/dialog';
-import Button, { Label as BtnLabel } from '@smui/button';
+import Button, { Group, Label as BtnLabel } from '@smui/button';
 import LinearProgress from '@smui/linear-progress';
 import type { SnackbarComponentDev } from '@smui/snackbar';
 import Snackbar from '@smui/snackbar';
+
+// import icon components
+import { Svg } from '@smui/common/elements';
+import { mdiLogin, mdiWeatherSunny, mdiWeatherNight, mdiArrowLeft } from '@mdi/js';
 
 import UrlPath from "../../util/FrontUrlPath";
 import FrontInfo, { buildParams } from "../../util/FrontInfo";
@@ -46,4 +50,8 @@ async function loadList() {
     }
 
     loaded = true;
+}
+
+function backToList() {
+    navigate('/front', { replace: true });
 }

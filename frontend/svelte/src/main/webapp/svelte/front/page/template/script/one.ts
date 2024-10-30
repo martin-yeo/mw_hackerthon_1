@@ -9,6 +9,10 @@ import Dialog, {Title as DialogTitle, Content as DialogContent, Actions} from '@
 import type { SnackbarComponentDev } from '@smui/snackbar';
 import Snackbar from '@smui/snackbar';
 
+// import icon components
+import { Svg } from '@smui/common/elements';
+import { mdiLogin, mdiWeatherSunny, mdiWeatherNight, mdiArrowLeft } from '@mdi/js';
+
 import UrlPath from "../../util/FrontUrlPath";
 import FrontInfo, { buildParams } from "../../util/FrontInfo";
 
@@ -44,4 +48,8 @@ async function loadOne(reg_no) {
     }
 
     loaded = true;
+}
+
+function backToList() {
+    navigate('/front', { replace: true });
 }

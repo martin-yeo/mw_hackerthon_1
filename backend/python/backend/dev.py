@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+from corsheaders.defaults import default_headers
 
 # Build paths insidce the project like this: BASE_DIR / 'subdir'.
 SETTINGS_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'backend.api',
     'django_user_agents',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -52,7 +54,18 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_user_agents.middleware.UserAgentMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+# CORS 도메인 허용
+CORS_ALLOW_ALL_ORIGINS = False  # 또는 설정하지 않음
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8081",  # 허용할 도메인 (예: React 프론트엔드 서버)
+]
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'x-xsrf-token',
+]
+
 
 ROOT_URLCONF = 'backend.urls'
 

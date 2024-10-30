@@ -35,8 +35,9 @@ router.register('messages', MessageViewSet)
 
 urlpatterns = [
     path('', index_view, name='index'),
-    path('api/list', list, name='list'),
-    path('api/insert', insert, name='insert'),
-    path('api/update', update, name='update'),
-    path('api/delete', delete, name='delete')
+    path('api/front/list', list, name='list'),
+    path('api/front/one/<str:article_no>', one, name='one'),
+    path('api/front/insert', insert, name='insert'),
+    path('api/front/update', update, name='update'),
+    path('api/front/delete', delete, name='delete')
 ]
