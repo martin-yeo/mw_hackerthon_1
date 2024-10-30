@@ -19,10 +19,11 @@ public class FrontTemplateController {
     private FrontTemplateServiceImpl frontTemplateServiceImpl;
 
     @ResponseBody
-    @RequestMapping(value = "/list", method=RequestMethod.POST) // URL 주소 표현, POST 전송 받음
+    @RequestMapping(value = "/list", method=RequestMethod.GET) // URL 주소 표현, POST 전송 받음
     public ResponseEntity<Object> templateList(
-        @RequestBody HashMap<String, Object> dataMap
+//        @RequestBody HashMap<String, Object> dataMap
     ) {
+        HashMap<String, Object> dataMap = new HashMap<>();
         Map<String, Object> resultMap = frontTemplateServiceImpl.selectTemplateListService(dataMap);
 
         return new ResponseEntity<Object>(GsonUtil.toJson(resultMap), HttpStatus.OK);
@@ -49,7 +50,7 @@ public class FrontTemplateController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/update", method=RequestMethod.POST)
+    @RequestMapping(value = "/update", method=RequestMethod.PUT)
     public ResponseEntity<Object> updateTemplateData(
         @RequestBody HashMap<String, Object> dataMap
     ) {
@@ -59,7 +60,7 @@ public class FrontTemplateController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/delete", method=RequestMethod.POST)
+    @RequestMapping(value = "/delete", method=RequestMethod.DELETE)
     public ResponseEntity<Object> deleteTemplateData(
         @RequestBody HashMap<String, Object> dataMap
     ) {
