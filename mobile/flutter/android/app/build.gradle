@@ -24,7 +24,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace "kr.ac.mokwon.flutter_template"
-    compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {

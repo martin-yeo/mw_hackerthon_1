@@ -10,6 +10,11 @@ import '_common/constant/common_constant.dart';
 // page import declarations
 import './splash/screen/splash_page.dart';
 import './main/screen/main_page.dart';
+import './template/screen/list_page.dart';
+import './template/screen/detail_page.dart';
+import './template/screen/register_page.dart';
+import './template/screen/update_page.dart';
+import './template/screen/delete_page.dart';
 
 final storage = const FlutterSecureStorage();
 
@@ -64,12 +69,7 @@ class _MWHacktonAppState extends State<MWHacktonApp> {
       ),
       debugShowCheckedModeBanner: false,
       home: const SplashPage(),
-
-      // 페이지 전환시마다 token refresh 되게 하기
       onGenerateRoute: (RouteSettings settings) {
-        // token refresh 할 곳만 지정해서 넣기
-        // loginService.extendLoginInfo();
-
         switch(settings.name) {
           case '/main': return MaterialPageRoute(builder: (BuildContext context) {
             ctx = context;
@@ -78,6 +78,11 @@ class _MWHacktonAppState extends State<MWHacktonApp> {
 
           // {PageName}은 Dart 파일 생성 후 페이지 이름 변경
           // case '/routename' : return MaterialPageRoute(builder: (BuildContext context) => const {PageName}(), settings:settings);
+          case '/template/list' : return MaterialPageRoute(builder: (BuildContext context) => const TemplateListPage(), settings:settings);
+          case '/template/detail' : return MaterialPageRoute(builder: (BuildContext context) => const TemplateDetailPage(), settings:settings);
+          case '/template/register' : return MaterialPageRoute(builder: (BuildContext context) => const TemplateRegisterPage(), settings:settings);
+          case '/template/update' : return MaterialPageRoute(builder: (BuildContext context) => const TemplateUpdatePage(), settings:settings);
+          case '/template/delete' : return MaterialPageRoute(builder: (BuildContext context) => const TemplateDeletePage(), settings:settings);
 
         }
       },

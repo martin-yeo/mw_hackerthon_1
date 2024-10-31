@@ -7,9 +7,9 @@ class EndPoint {
 
 
   // END POINT - DB template
-  static const LIST = "${END_POINT}/list";
-  static const ONE = "${END_POINT}/one";
-  static const INSERT = "${END_POINT}/insert";
-  static const UPDATE = "${END_POINT}/update";
-  static const DELETE = "${END_POINT}/delete";
+  static const TEMPLATE_LIST = "${END_POINT}/list";
+  static const TEMPLATE_ONE = "${END_POINT}/one";
+  static const TEMPLATE_INSERT = "${END_POINT}/insert";
+  static const TEMPLATE_UPDATE = "${END_POINT}/update";
+  static const TEMPLATE_DELETE = "${END_POINT}/delete";
 }

@@ -14,7 +14,7 @@ Color bgDanger = const Color(0xFFf32626);
 Color defaultText = const Color(0xFF1E2137);
 Color defaultEnabled = const Color(0xFFA72038);
 Color defaultFocused = const Color(0xFFA72038);
-Color defaultFocusedDark = const Color(0xFF013CD4);
+Color defaultFocusedDark = const Color(0xFFA72038);
 Color defaultCorp = const Color(0xFFA72038);
 Color bgDisabled = const Color(0XFF80B3FF);
 Color fgDisabled = const Color(0XFFBED8FF);
@@ -42,6 +42,10 @@ Color appbarBorder = const Color(0xFFE9ECF2);
 Color modalDimText = const Color(0xFF5D646E);
 Color bgMsgDetail = const Color(0xFFF8F9FB);
 Color bgBtnSecondary = const Color(0xFFE9ECF2);
+
+// input
+Color bgInput = const Color(0xFFF8F9FB);
+Color maskedText = const Color(0xFFD6D8DC);
 
 
 // ASSETS 

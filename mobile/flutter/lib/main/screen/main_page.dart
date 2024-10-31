@@ -44,6 +44,94 @@ class _MainPageState extends State<MainPage> {
 
   }
 
+  navigateListPage(BuildContext context) async {
+    /*
+    dynamic data = await Navigator.pushNamed(context, '/template/list'); // result 값이 필요한 경우
+    bool result = data['result'];
+
+    if(result) {
+      setState(() {
+        _fetchCSData = getCSHistoryList(true);
+      });
+    }
+    */
+
+    Navigator.pushNamed(context, '/template/list');
+  }
+
+  navigateDetailPage(BuildContext context) async {
+    /*
+    dynamic data = await Navigator.pushNamed(context, '/template/list'); // result 값이 필요한 경우
+    bool result = data['result'];
+
+    if(result) {
+      setState(() {
+        _fetchCSData = getCSHistoryList(true);
+      });
+    }
+    */
+
+    Navigator.pushNamed(context, '/template/detail',
+        arguments:{
+          'num':1
+        }
+    );
+  }
+
+  navigateRegisterPage(BuildContext context) async {
+    /*
+    dynamic data = await Navigator.pushNamed(context, '/template/list'); // result 값이 필요한 경우
+    bool result = data['result'];
+
+    if(result) {
+      setState(() {
+        _fetchCSData = getCSHistoryList(true);
+      });
+    }
+    */
+
+    Navigator.pushNamed(context, '/template/register');
+  }
+
+  navigateUpdatePage(BuildContext context) async {
+    /*
+    dynamic data = await Navigator.pushNamed(context, '/template/list'); // result 값이 필요한 경우
+    bool result = data['result'];
+
+    if(result) {
+      setState(() {
+        _fetchCSData = getCSHistoryList(true);
+      });
+    }
+    */
+
+    Navigator.pushNamed(context, '/template/update',
+        arguments:{
+          'num':1
+        }
+    );
+  }
+
+  navigateDeletePage(BuildContext context) async {
+    /*
+    dynamic data = await Navigator.pushNamed(context, '/template/list'); // result 값이 필요한 경우
+    bool result = data['result'];
+
+    if(result) {
+      setState(() {
+        _fetchCSData = getCSHistoryList(true);
+      });
+    }
+    */
+
+    Navigator.pushNamed(context, '/template/delete',
+        arguments:{
+          'num':1
+        }
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final double statusBarHeight = MediaQuery.of(context).padding.top;
@@ -90,9 +178,6 @@ class _MainPageState extends State<MainPage> {
       endDrawer: mainDrawer.getDrawer(context),
       onEndDrawerChanged: (result) async {
         _isDrawerOpen = result;
-        // true : opened
-        // false : closed
-        // Drawer가 닫혔을 때 업데이트된 사업장이 있는지 확인하고, null이 아닐 경우 화면 새로고침
 
         if(!result) {
           String? bn = await storage.read(key: "updateRepresent");
@@ -125,7 +210,91 @@ class _MainPageState extends State<MainPage> {
           },
 
           child: Column(
-            children: [],
+            children: [
+              Container(
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: defaultEnabled,
+                    foregroundColor: white,
+                    padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
+                    textStyle: const TextStyle(fontSize: 17),
+                    minimumSize: const Size.fromHeight(40),
+                  ),
+                  onPressed: () => {
+                    navigateListPage(context)
+                  },
+                  child: Text("리스트 페이지"),
+                ),
+              ),
+
+              Container(
+                margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: defaultEnabled,
+                    foregroundColor: white,
+                    padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
+                    textStyle: const TextStyle(fontSize: 17),
+                    minimumSize: const Size.fromHeight(40),
+                  ),
+                  onPressed: () => {
+                    navigateDetailPage(context)
+                  },
+                  child: Text("상세 페이지"),
+                ),
+              ),
+
+              Container(
+                margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: defaultEnabled,
+                    foregroundColor: white,
+                    padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
+                    textStyle: const TextStyle(fontSize: 17),
+                    minimumSize: const Size.fromHeight(40),
+                  ),
+                  onPressed: () => {
+                    navigateRegisterPage(context)
+                  },
+                  child: Text("등록 페이지"),
+                ),
+              ),
+
+              Container(
+                margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: defaultEnabled,
+                    foregroundColor: white,
+                    padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
+                    textStyle: const TextStyle(fontSize: 17),
+                    minimumSize: const Size.fromHeight(40),
+                  ),
+                  onPressed: () => {
+                    navigateUpdatePage(context)
+                  },
+                  child: Text("수정 페이지"),
+                ),
+              ),
+
+              Container(
+                margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: defaultEnabled,
+                    foregroundColor: white,
+                    padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
+                    textStyle: const TextStyle(fontSize: 17),
+                    minimumSize: const Size.fromHeight(40),
+                  ),
+                  onPressed: () => {
+                    navigateDeletePage(context)
+                  },
+                  child: Text("삭제 페이지"),
+                ),
+              ),
+            ],
           )
         ),
       ),

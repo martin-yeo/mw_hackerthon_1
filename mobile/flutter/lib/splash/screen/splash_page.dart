@@ -17,7 +17,7 @@ class _SplashPageState extends State<SplashPage> {
     double deviceWidth = MediaQuery.of(context).size.width;
 
     Future.delayed(const Duration(seconds: 3), () {
-      Navigator.pushNamedAndRemoveUntil(context, '/member/login', (route) => false);
+      Navigator.pushNamedAndRemoveUntil(context, '/main', (route) => false);
     });
 
     return Scaffold(
