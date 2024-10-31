@@ -41,6 +41,8 @@ class HttpService {
       }
     } catch(e) {
         print(e);
+        dynamic result = {};
+
         result['result'] = false;
         return result;
     }
