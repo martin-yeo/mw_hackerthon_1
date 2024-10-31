@@ -29,7 +29,7 @@ class TemplateService extends HttpService{
   Future<dynamic> fetchTemplateDetail(BuildContext context, int num) async {
     var result = await super.request(
         context,
-        "POST",
+        "post",
         "${EndPoint.TEMPLATE_ONE}/${num}",
         {},
         {'num':num}
@@ -45,7 +45,7 @@ class TemplateService extends HttpService{
       "post",
       EndPoint.TEMPLATE_INSERT,
       {},
-      {'title': title, 'content': content}
+      {'title': title, 'content': content, 'name':title}
     );
     // print(result);
 
@@ -59,7 +59,11 @@ class TemplateService extends HttpService{
         "put",
         EndPoint.TEMPLATE_UPDATE,
         {},
-        {'num':num, 'title': title, 'content': content}
+        {
+          'num':num,
+          'name':content,
+          'title': title, 'content': content
+        }
     );
     // print(result);
 
@@ -71,7 +75,7 @@ class TemplateService extends HttpService{
     var result = await super.request(
         context,
         "delete",
-        EndPoint.TEMPLATE_UPDATE,
+        EndPoint.TEMPLATE_DELETE,
         {},
         {'num':num}
     );

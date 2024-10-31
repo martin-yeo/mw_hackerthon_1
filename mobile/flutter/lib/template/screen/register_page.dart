@@ -90,10 +90,6 @@ class _TemplateRegisterPageState extends State<TemplateRegisterPage> {
         Navigator.pop(context, {
           "result": true
         });
-      } else {
-        Navigator.pop(context, {
-          "result": false
-        });
       }
     }
   }

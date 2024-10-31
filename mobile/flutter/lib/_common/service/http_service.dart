@@ -16,14 +16,15 @@ class HttpService {
       _header.addAll(header);
 
       var _body = jsonEncode(body);
+      String _type = type.toLowerCase();
 
-      if(type == 'get') {
+      if(_type == 'get') {
         response = await http.get(Uri.parse(url), headers: _header);
-      } else if(type == 'post') {
+      } else if(_type == 'post') {
         response = await http.post(Uri.parse(url), headers: _header, body:_body);
-      } else if(type == 'put') {
+      } else if(_type == 'put') {
         response = await http.put(Uri.parse(url), headers: _header, body:_body);
-      } else if(type == 'delete') {
+      } else if(_type == 'delete') {
         response = await http.delete(Uri.parse(url), headers: _header, body:_body);
       }
 

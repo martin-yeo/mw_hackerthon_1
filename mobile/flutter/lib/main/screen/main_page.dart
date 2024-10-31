@@ -73,7 +73,7 @@ class _MainPageState extends State<MainPage> {
 
     Navigator.pushNamed(context, '/template/detail',
         arguments:{
-          'num':1
+          'num':2
         }
     );
   }

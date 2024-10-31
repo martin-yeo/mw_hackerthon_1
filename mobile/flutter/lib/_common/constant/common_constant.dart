@@ -47,12 +47,25 @@ Color bgBtnSecondary = const Color(0xFFE9ECF2);
 Color bgInput = const Color(0xFFF8F9FB);
 Color maskedText = const Color(0xFFD6D8DC);
 
+// divider
+Color contentDivider = const Color(0xFFE9ECF2);
+Color contentDividerDark = const Color(0xFFDEE4F5);
+
+// snb
+Color snbBodyBg = const Color(0xFFF8F9FB);
+Color snbDimText = const Color(0xFF5D646E);
+Color snbDimDivider = const Color(0xFFABB4C2);
+Color snbBottomMenu = const Color(0xFFE9ECF2);
+Color snbBottomElemDivider = const Color(0xFFABB4C2);
+
+
 
 // ASSETS 
 // - 일반 String으로 넣으면 코드가 길어지기 때문에 한 파일에서 관리
 // - String 문자열 추가지 pubspec.yaml 에서 추가하고 pub get dependencies를 통해서 업데이트 해야됨
 // String assetName = "asset경로";
 String svgIcNavArrowDown = 'assets/images/icon/ic_nav_arrow_down.svg';
+String svgIcClose = 'assets/images/icon/ic_close.svg';
 String logo = 'assets/images/logo.png';
 String logoWhite = 'assets/images/logo_white.png';
 

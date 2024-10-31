@@ -35,6 +35,8 @@ dependencies:
   intl: ^0.18.0
   flutter_svg: ^1.1.6
   flutter_secure_storage: ^7.0.1
+  pull_to_refresh: ^2.0.0
+  url_launcher: ^6.1.7
   kakaomap_webview:
     git:
       url: https://github.com/imyong7/kakaomap_webview.git
@@ -72,6 +74,7 @@ flutter:
     - assets/images/icon/ic_nav_arrow_down.svg
     - assets/images/logo.png
     - assets/images/logo_white.png
+    - assets/images/icon/ic_close.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
