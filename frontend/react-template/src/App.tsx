@@ -21,7 +21,7 @@ function App() {
           <Route path="/" element={<Template />}>
             <Route index element={<Main />} />
             <Route path="/template/list" element={<TemplateList />} />
-            <Route path="/template/detail" element={<TemplateDetail />} />
+            <Route path="/template/detail/:num" element={<TemplateDetail />} />
             <Route path="/template/insert" element={<TemplateInsert />} />
             <Route path="/template/update" element={<TemplateUpdate />} />
             <Route path="/template/delete" element={<TemplateDelete />} />

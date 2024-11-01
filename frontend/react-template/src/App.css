@@ -45,7 +45,7 @@
   border-collapse: collapse;
   width: 100%;
 }
-.tbl-border td{
+.tbl-border th, .tbl-border td{
   border: 1px solid #CCC;
 }
 .w-100{

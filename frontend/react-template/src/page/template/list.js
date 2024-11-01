@@ -40,7 +40,9 @@ function TemplateList() {
                             {data.map((item, index) => (
                             <tr key={index}>
                                 <td>{item.num}</td>
-                                <td>{item.name}</td>
+                                <td>
+                                    <Link to={`/template/detail/${item.num}`}>{item.name}</Link>
+                                </td>
                             </tr>
                             ))}
                         </tbody>

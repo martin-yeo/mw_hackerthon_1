@@ -1,7 +1,31 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import {urlTemplateMapping} from "../../_common/url_endpoint";
 
 function TemplateDetail() {
+    const { num } = useParams();
+    const [data, setData] = useState([]);
+
+
+    useEffect(() => {
+        fetch(`${urlTemplateMapping.one}/${num}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ "num": num }), // text를 JSON 형식으로 변환
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                setData(data.data);
+            })
+            .catch((error) => {
+                console.error('Error fetching data:', error);
+            });
+    }, []);
+
+
     return (
         <div>
             <nav>
@@ -12,7 +36,7 @@ function TemplateDetail() {
             </nav>
 
             <div>
-                Template Detail Page
+                Template Detail Page :: {num}
                 <div className="mt-1">
                     <table className="tbl tbl-border txt-center">
                         <thead>
@@ -24,10 +48,10 @@ function TemplateDetail() {
                         <tbody>
                             <tr>
                                 <td>
-
+                                    {data.num}
                                 </td>
                                 <td>
-
+                                    {data.name}
                                 </td>
                             </tr>
                         </tbody>
