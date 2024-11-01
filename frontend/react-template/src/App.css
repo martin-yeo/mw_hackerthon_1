@@ -36,3 +36,27 @@
     transform: rotate(360deg);
   }
 }
+
+
+
+/* custom add */
+.tbl{
+  border-spacing: 0;
+  border-collapse: collapse;
+  width: 100%;
+}
+.tbl-border td{
+  border: 1px solid #CCC;
+}
+.w-100{
+  width:100%;
+}
+.mt-1{
+  margin-top:1rem;
+}
+.mt-3{
+  margin-top:3rem;
+}
+.txt-center{
+  text-align:center
+}

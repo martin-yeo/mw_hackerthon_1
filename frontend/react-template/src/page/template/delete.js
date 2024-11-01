@@ -13,6 +13,22 @@ function TemplateDelete() {
 
             <div>
                 Template Delete Page
+                <div className="mt-1">
+                    <table className="tbl tbl-border txt-center">
+                        <thead>
+                        <tr>
+                            <th>num</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     );

@@ -13,6 +13,23 @@ function TemplateInsert() {
 
             <div>
                 Template Insert Page
+                <div className="mt-1">
+                    <table className="tbl tbl-border txt-center">
+                        <thead>
+                        <tr>
+                            <th>name</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     );
