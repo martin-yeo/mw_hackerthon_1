@@ -1,0 +1,122 @@
+.auth-container {
+  @include flex(column, center, center);
+  min-height: 100vh;
+  padding: map-get($spacing, 4);
+  background-color: $background-grey;
+
+  .auth-card {
+    @include card;
+    width: 100%;
+    max-width: 400px;
+    padding: map-get($spacing, 6);
+
+    .auth-header {
+      text-align: center;
+      margin-bottom: map-get($spacing, 6);
+
+      h1 {
+        @include typography(2xl, 700);
+        color: $primary-color;
+        margin-bottom: map-get($spacing, 2);
+      }
+
+      p {
+        @include typography(sm);
+        color: $text-secondary;
+      }
+    }
+
+    .auth-form {
+      .form-group {
+        margin-bottom: map-get($spacing, 4);
+
+        label {
+          display: block;
+          @include typography(sm, 500);
+          margin-bottom: map-get($spacing, 1);
+        }
+
+        input {
+          @include input-base;
+        }
+
+        .error-message {
+          @include typography(xs);
+          color: $error-color;
+          margin-top: map-get($spacing, 1);
+        }
+      }
+
+      .submit-button {
+        @include button-base;
+        width: 100%;
+        background-color: $primary-color;
+        color: white;
+        margin-top: map-get($spacing, 4);
+        padding: map-get($spacing, 3);
+
+        &:hover:not(:disabled) {
+          background-color: $primary-dark;
+        }
+      }
+    }
+
+    .auth-footer {
+      margin-top: map-get($spacing, 6);
+      text-align: center;
+
+      .divider {
+        display: flex;
+        align-items: center;
+        margin: map-get($spacing, 4) 0;
+
+        &::before,
+        &::after {
+          content: '';
+          flex: 1;
+          height: 1px;
+          background-color: $text-disabled;
+        }
+
+        span {
+          padding: 0 map-get($spacing, 2);
+          color: $text-secondary;
+          @include typography(sm);
+        }
+      }
+
+      .social-buttons {
+        @include flex(row, center, center, wrap);
+        gap: map-get($spacing, 2);
+
+        button {
+          @include button-base;
+          flex: 1;
+          min-width: 120px;
+          background-color: $background-color;
+          border: 1px solid $text-disabled;
+          
+          img {
+            width: 20px;
+            height: 20px;
+            margin-right: map-get($spacing, 2);
+          }
+        }
+      }
+
+      .auth-links {
+        margin-top: map-get($spacing, 4);
+        @include typography(sm);
+        
+        a {
+          color: $primary-color;
+          text-decoration: none;
+          
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+} 

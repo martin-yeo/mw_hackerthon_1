@@ -1,15 +1,10 @@
-# mw_hackerthon
-목원대학교 해커톤 템플릿
+# FabLab Reservation System v1.0 by Martin
 
-## 템플릿 목록
+## 준비된 기초 템플릿 목록
 - Backend
-  - java-spring : JAVA 스프링 부트를 적용한 템플릿
   - node-js : Node-js를 적용한 템플릿
-  - python : Python-django를 적용한 템플릿
 - Frontend
   - React : React를 적용한 템플릿
-  - Vue : Vue를 적용한 템플릿
-  - Svelte : Svelte를 적용한 템플릿
 - mobile
   - Flutter : Flutter를 적용한 템플릿
 
@@ -75,7 +70,7 @@
 
 ## 디자인 요구 사항
 - 디자인 컨셉 : 모던한 디자인
-- 디자인 컬러 : 흰색, 버건디 레드, 버건디 그레이
+- 디자인 컬러 : 흰색, 버건디 레드, 건디 그레이
 - 디자인 툴 : Figma
 - 디자인 예시 : https://www.figma.com/community/file/1268484218873891387
 
@@ -150,4 +145,150 @@ graph TD
 
 ## API 엔드포인트
 Strapi에서 자동으로 생성되는 REST API 엔드포인트:
-- `POST /api/auth/local/register`
+- `POST /api/auth/local/register` : 회원가입
+- `POST /api/auth/local` : 로그인
+- `POST /api/auth/forgot-password` : 비밀번호 찾기
+- `PUT /api/auth/password-change` : 비밀번호 변경
+- `DELETE /api/users/me` : 회원 탈퇴
+- `GET /api/reservations` : 예약 목록 조회
+- `POST /api/reservations` : 새로운 예약 생성
+- `PUT /api/reservations/:id` : 예약 수정
+- `DELETE /api/reservations/:id` : 예약 취소
+- `GET /api/seats` : 좌석 목록 조회
+- `GET /api/seats/:id/availability` : 좌석 예약 가능 여부 확인
+
+## 프로젝트 구조
+```
+fablab-project/
+├── frontend/                
+│   ├── src/
+│   │   ├── components/     
+│   │   │   ├── auth/      
+│   │   │   │   ├── LoginForm.jsx        # 일반 로그인 폼
+│   │   │   │   ├── RegisterForm.jsx     # 회원가입 폼
+│   │   │   │   ├── SocialLogin.jsx      # 소셜 로그인 버튼들
+│   │   │   │   ├── PasswordChange.jsx   # 비밀번호 변경
+│   │   │   │   └── WithdrawalForm.jsx   # 회원탈퇴 폼
+│   │   │   ├── reservation/  
+│   │   │   │   ├── ReservationForm.jsx      # 예약 입력 폼
+│   │   │   │   ├── ReservationCalendar.jsx  # 예약 캘린더 뷰
+│   │   │   │   ├── SeatMap.jsx             # 좌석 배치도
+│   │   │   │   ├── SeatSelection.jsx       # 좌석 선택 컴포넌트
+│   │   │   │   ├── ReservationList.jsx     # 예약 목록
+│   │   │   │   └── ReservationDetail.jsx   # 예약 상세 정보
+│   │   │   ├── admin/     # 관리자 컴포넌트
+│   │   │   │   ├── AdminDashboard.jsx    # 관리자 대시보드
+│   │   │   │   ├── ReservationApproval.jsx # 예약 승인/거절
+│   │   │   │   ├── UserManagement.jsx    # 사용자 관리
+│   │   │   │   └── Statistics.jsx        # 통계 및 보고서
+│   │   │   ├── seat/                # 추가: 좌석 관련
+│   │   │   │   ├── SeatGrid.jsx     # 좌석 그리드 뷰
+│   │   │   │   ├── SeatType.jsx     # 좌석 유형 선택
+│   │   │   │   └── TeamSeatForm.jsx # 팀 좌석 예약
+│   │   │   ├── notification/        # 추가: 알림 관련
+│   │   │   │   ├── EmailNotification.jsx
+│   │   │   │   └── AlertModal.jsx
+│   │   │   └── common/    
+│   │   ├── pages/         
+│   │   │   ├── Home.jsx               # 메인 페이지
+│   │   │   ├── Login.jsx              # 로그인 페이지
+│   │   │   ├── Register.jsx           # 회원가입 페이지
+│   │   │   ├── MyPage.jsx             # 마이페이지
+│   │   │   ├── Reservation/           # 예약 관련 페이지
+│   │   │   │   ├── New.jsx            # 새 예약
+│   │   │   │   ├── List.jsx           # 예약 목록
+│   │   │   │   └── Calendar.jsx       # 캘린더 뷰
+│   │   │   └── Admin/                 # 관리자 페이지
+│   │   │       ├── Dashboard.jsx
+│   │   │       ├── Reservations.jsx
+│   │   │       └── Users.jsx
+│   │   ├── hooks/         
+│   │   │   ├── useAuth.js             # 인증 관련 훅
+│   │   │   ├── useReservation.js      # 예약 관련 훅
+│   │   │   ├── useNotification.js     # 알림 관련 훅
+│   │   │   └── useCalendar.js         # 캘린더 관련 훅
+│   │   ├── api/           
+│   │   │   ├── client.js              # axios 설정
+│   │   │   ├── auth.js                # 인증 API
+│   │   │   ├── reservations.js        # 예약 API
+│   │   │   └── admin.js               # 관리자 API
+│   │   ├── styles/        
+│   │   │   ├── global.css             # 전역 스타일
+│   │   │   ├── theme.js               # 테마 설정
+│   │   │   └── variables.css          # CSS 변수 (버건디 컬러 등)
+│   │   └── utils/         
+│   │       ├── validation.js          # 유효성 검사
+│   │       ├── dateUtils.js           # 날짜 관련 유틸
+│   │       └── constants.js           # 상수 정의
+│   └── public/            
+│       ├── images/
+│       │   ├── logo.png               # 목원대 로고
+│       │   └── banner.png             # 배너 이미지
+│       └── icons/                     # Material Icons
+│
+├── backend/               
+│   ├── src/
+│   │   ├── api/          
+│   │   │   ├── middlewares/  
+│   │   │   │   ├── reservationValidation.js  # 예약 유효성 검사
+│   │   │   │   ├── authValidation.js         # 인증 유효성 검사
+│   │   │   │   └── loginAttempts.js          # 로그인 시도 제한
+│   │   │   ├── extensions/   
+│   │   │   │   ├── calendar-sync.js              # 구글 캘린더 연동
+│   │   │   │   ├── email-notifications.js        # 이메일 알림
+│   │   │   │   └── social-auth.js               # 소셜 로그인 설정
+│   │   │   └── services/     
+│   │   │       ├── reservation.js                # 예약 서비스
+│   │   │       ├── notification.js               # 알림 서비스
+│   │   │       └── statistics.js                 # 통계 서비스
+│   │   └── utils/        # 추가: 유틸리티
+│   │       ├── seat-utils.js
+│   │       └── validation/
+│   └── config/           
+│       ├── database.js                       # DB 설정
+│       ├── server.js                         # 서버 설정
+│       ├── plugins.js                        # 플러그인 설정
+│       └── middlewares.js                    # 미들웨어 설정
+│
+├── mobile/                # 추가: Flutter 모바일 앱
+│   ├── lib/
+│   │   ├── screens/      
+│   │   │   ├── auth/              # 인증 화면
+│   │   │   │   ├── login.dart
+│   │   │   │   └── register.dart
+│   │   │   ├── reservation/       # 예약 화면
+│   │   │   │   ├── reservation_list.dart
+│   │   │   │   └── reservation_form.dart
+│   │   │   └── admin/            # 관리자 화면
+│   │   ├── widgets/      
+│   │   │   ├── seat/            # 좌석 관련 위젯
+│   │   │   └── common/          # 공통 위젯
+│   │   ├── services/     
+│   │   │   ├── auth_service.dart
+│   │   │   └── reservation_service.dart
+│   │   ├── models/       
+│   │   │   ├── user.dart
+│   │   │   ├── reservation.dart
+│   │   │   └── seat.dart
+│   │   └── utils/        
+│   │       ├── constants.dart
+│   │       └── validators.dart
+│
+├── docs/                  # 추가: 문서화
+│   ├── api/              
+│   │   ├── auth.md       # 인증 API 문서
+│   │   ├── reservation.md # 예약 API 문서
+│   │   └── admin.md      # 관리자 API 문서
+│   ├── setup/            
+│   │   ├── backend.md    # 백엔드 설정 가이드
+│   │   ├── frontend.md   # 프론트엔드 설정 가이드
+│   │   └── mobile.md     # 모바일 앱 설정 가이드
+│   └── design/           
+│       ├── wireframes/   # 와이어프레임
+│       ├── mockups/      # 목업
+│       └── style-guide.md # 스타일 가이드
+│
+├── .env.example          # 추가: 환경변수 예시
+├── .gitignore           
+└── docker-compose.yml    # 추가: Docker 설정
+```

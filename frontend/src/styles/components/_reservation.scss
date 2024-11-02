@@ -1,0 +1,154 @@
+.reservation-container {
+  padding: map-get($spacing, 4);
+
+  .reservation-header {
+    @include flex(row, space-between, center);
+    margin-bottom: map-get($spacing, 6);
+
+    h1 {
+      @include typography(3xl, 700);
+    }
+
+    .header-actions {
+      @include flex(row, flex-end, center);
+      gap: map-get($spacing, 2);
+    }
+  }
+
+  .reservation-form {
+    @include card;
+    padding: map-get($spacing, 6);
+    max-width: 800px;
+    margin: 0 auto;
+
+    .form-section {
+      margin-bottom: map-get($spacing, 6);
+
+      h2 {
+        @include typography(xl, 600);
+        margin-bottom: map-get($spacing, 4);
+      }
+
+      .form-row {
+        @include flex(row, flex-start, flex-start);
+        gap: map-get($spacing, 4);
+        margin-bottom: map-get($spacing, 4);
+
+        @include respond-to(sm) {
+          flex-direction: column;
+        }
+
+        .form-group {
+          flex: 1;
+
+          label {
+            display: block;
+            @include typography(sm, 500);
+            margin-bottom: map-get($spacing, 2);
+          }
+        }
+      }
+    }
+
+    .seat-selection {
+      .seat-types {
+        @include flex(row, flex-start, stretch, wrap);
+        gap: map-get($spacing, 2);
+        margin-bottom: map-get($spacing, 4);
+
+        .seat-type {
+          flex: 1;
+          min-width: 200px;
+          padding: map-get($spacing, 3);
+          border: 1px solid $text-disabled;
+          border-radius: map-get($border-radius, md);
+          cursor: pointer;
+          @include transition(border-color, background-color);
+
+          &.selected {
+            border-color: $primary-color;
+            background-color: rgba($primary-color, 0.05);
+          }
+
+          h3 {
+            @include typography(lg, 600);
+            margin-bottom: map-get($spacing, 2);
+          }
+
+          .seat-info {
+            @include typography(sm);
+            color: $text-secondary;
+          }
+        }
+      }
+
+      .seat-map {
+        @include card;
+        padding: map-get($spacing, 4);
+        margin-top: map-get($spacing, 4);
+
+        .seat-grid {
+          display: grid;
+          gap: map-get($spacing, 2);
+          justify-content: center;
+
+          .seat {
+            @include flex(column, center, center);
+            aspect-ratio: 1;
+            border: 2px solid $text-disabled;
+            border-radius: map-get($border-radius, sm);
+            cursor: pointer;
+            @include transition(all);
+
+            &.available {
+              border-color: $success-color;
+              &:hover {
+                background-color: rgba($success-color, 0.1);
+              }
+            }
+
+            &.selected {
+              border-color: $primary-color;
+              background-color: rgba($primary-color, 0.1);
+            }
+
+            &.unavailable {
+              border-color: $error-color;
+              background-color: rgba($error-color, 0.1);
+              cursor: not-allowed;
+            }
+          }
+        }
+      }
+    }
+
+    .form-actions {
+      @include flex(row, flex-end, center);
+      gap: map-get($spacing, 3);
+      margin-top: map-get($spacing, 6);
+
+      button {
+        @include button-base;
+        padding: map-get($spacing, 3) map-get($spacing, 6);
+
+        &.submit {
+          background-color: $primary-color;
+          color: white;
+
+          &:hover:not(:disabled) {
+            background-color: $primary-dark;
+          }
+        }
+
+        &.cancel {
+          background-color: $background-grey;
+          color: $text-primary;
+
+          &:hover:not(:disabled) {
+            background-color: darken($background-grey, 5%);
+          }
+        }
+      }
+    }
+  }
+} 

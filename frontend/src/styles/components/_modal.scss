@@ -1,0 +1,110 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba($secondary-dark, 0.5);
+  @include flex(row, center, center);
+  z-index: map-get($z-index, modal);
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease-out;
+
+  .modal-content {
+    background-color: $background-color;
+    border-radius: map-get($border-radius, lg);
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideIn 0.3s ease-out;
+
+    &.small { width: 90%; max-width: 400px; }
+    &.medium { width: 90%; max-width: 600px; }
+    &.large { width: 90%; max-width: 800px; }
+    &.full { width: 95%; max-width: 1200px; }
+
+    .modal-header {
+      @include flex(row, space-between, center);
+      padding: map-get($spacing, 4) map-get($spacing, 6);
+      border-bottom: 1px solid $background-grey;
+
+      .modal-title {
+        @include typography(xl, 600);
+        margin: 0;
+      }
+
+      .modal-close {
+        @include button-base;
+        padding: map-get($spacing, 1);
+        background: none;
+        color: $text-secondary;
+        
+        &:hover {
+          color: $text-primary;
+          background-color: $background-grey;
+        }
+
+        i {
+          font-size: 24px;
+        }
+      }
+    }
+
+    .modal-body {
+      padding: map-get($spacing, 6);
+    }
+
+    .modal-footer {
+      @include flex(row, flex-end, center);
+      gap: map-get($spacing, 3);
+      padding: map-get($spacing, 4) map-get($spacing, 6);
+      border-top: 1px solid $background-grey;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Confirm Modal specific styles
+.confirm-modal {
+  text-align: center;
+  padding: map-get($spacing, 4);
+
+  .icon-container {
+    margin-bottom: map-get($spacing, 4);
+
+    i {
+      font-size: 48px;
+
+      &.warning { color: $warning-color; }
+      &.error { color: $error-color; }
+      &.info { color: $info-color; }
+      &.success { color: $success-color; }
+    }
+  }
+
+  .confirm-title {
+    @include typography(xl, 600);
+    margin-bottom: map-get($spacing, 3);
+  }
+
+  .confirm-message {
+    @include typography(base);
+    color: $text-secondary;
+    margin-bottom: map-get($spacing, 6);
+  }
+} 

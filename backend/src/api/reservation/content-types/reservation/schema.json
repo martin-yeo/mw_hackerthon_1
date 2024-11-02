@@ -1,0 +1,50 @@
+{
+  "kind": "collectionType",
+  "collectionName": "reservations",
+  "info": {
+    "singularName": "reservation",
+    "pluralName": "reservations",
+    "displayName": "Reservation"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "seat": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::seat.seat"
+    },
+    "startTime": {
+      "type": "datetime",
+      "required": true
+    },
+    "endTime": {
+      "type": "datetime",
+      "required": true
+    },
+    "purpose": {
+      "type": "enumeration",
+      "enum": ["팀프로젝트", "개인학습", "조별학습", "회의", "기타"],
+      "required": true
+    },
+    "purposeDetail": {
+      "type": "text"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["pending", "approved", "rejected", "cancelled"],
+      "default": "pending"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "teamSize": {
+      "type": "integer",
+      "min": 1,
+      "max": 6
+    }
+  }
+} 

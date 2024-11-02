@@ -1,0 +1,230 @@
+// Base imports
+@import 'variables';
+@import 'mixins';
+
+// Reset and base styles
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: $font-size-base;
+}
+
+body {
+  font-family: $font-family;
+  line-height: 1.5;
+  color: $text-primary;
+  background-color: $background-color;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Typography
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+p {
+  margin: 0 0 map-get($spacing, 4);
+}
+
+a {
+  color: $primary-color;
+  text-decoration: none;
+  @include transition(color);
+
+  &:hover {
+    color: $primary-dark;
+  }
+}
+
+// Layout
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 map-get($spacing, 4);
+
+  @include respond-to(sm) {
+    padding: 0 map-get($spacing, 3);
+  }
+}
+
+.row {
+  @include flex(row, flex-start, stretch, wrap);
+  margin: 0 -#{map-get($spacing, 2)};
+
+  .col {
+    padding: 0 map-get($spacing, 2);
+    flex: 1;
+
+    @include respond-to(sm) {
+      flex: 0 0 100%;
+    }
+  }
+}
+
+// Utility classes
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.mt-1 { margin-top: map-get($spacing, 1); }
+.mt-2 { margin-top: map-get($spacing, 2); }
+.mt-3 { margin-top: map-get($spacing, 3); }
+.mt-4 { margin-top: map-get($spacing, 4); }
+
+.mb-1 { margin-bottom: map-get($spacing, 1); }
+.mb-2 { margin-bottom: map-get($spacing, 2); }
+.mb-3 { margin-bottom: map-get($spacing, 3); }
+.mb-4 { margin-bottom: map-get($spacing, 4); }
+
+.mx-auto { 
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.d-flex { display: flex; }
+.justify-content-center { justify-content: center; }
+.align-items-center { align-items: center; }
+.flex-column { flex-direction: column; }
+
+.w-100 { width: 100%; }
+.h-100 { height: 100%; }
+
+// Component imports
+@import 'components/auth';
+@import 'components/reservation';
+@import 'components/admin';
+@import 'components/common';
+@import 'components/modal';
+@import 'components/forms';
+
+// Dark mode
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: $background-dark;
+    color: white;
+  }
+
+  .card, .modal-content {
+    background-color: lighten($background-dark, 5%);
+  }
+
+  input, select, textarea {
+    background-color: $background-dark;
+    color: white;
+    border-color: rgba(white, 0.2);
+
+    &:focus {
+      border-color: $primary-color;
+    }
+  }
+
+  .table {
+    th {
+      background-color: rgba(white, 0.05);
+    }
+
+    td {
+      border-color: rgba(white, 0.1);
+    }
+  }
+
+  .divider {
+    background-color: rgba(white, 0.1);
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+// Print styles
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: white;
+  }
+
+  .container {
+    max-width: none;
+    padding: 0;
+  }
+
+  a {
+    text-decoration: none !important;
+  }
+
+  .card {
+    box-shadow: none;
+    border: 1px solid $text-disabled;
+  }
+}
+
+// Accessibility
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+:focus {
+  outline: 2px solid $primary-color;
+  outline-offset: 2px;
+}
+
+[role="button"],
+button {
+  cursor: pointer;
+}
+
+// Scrollbar styling
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: $background-grey;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $text-disabled;
+  border-radius: 4px;
+
+  &:hover {
+    background: darken($text-disabled, 10%);
+  }
+} 

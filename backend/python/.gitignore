@@ -1,8 +1,0 @@
-.idea
-venv/*
-
-run_*.bat
-application.properties
-
-sql_cron/*
-/python.iml

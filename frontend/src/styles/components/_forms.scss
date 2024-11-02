@@ -1,0 +1,163 @@
+.form-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: map-get($spacing, 4);
+
+  .form-header {
+    text-align: center;
+    margin-bottom: map-get($spacing, 6);
+
+    h1 {
+      @include typography(2xl, 700);
+      color: $primary-color;
+      margin-bottom: map-get($spacing, 2);
+    }
+
+    p {
+      @include typography(base);
+      color: $text-secondary;
+    }
+  }
+
+  .form-group {
+    margin-bottom: map-get($spacing, 4);
+
+    label {
+      display: block;
+      @include typography(sm, 500);
+      margin-bottom: map-get($spacing, 2);
+
+      &.required::after {
+        content: '*';
+        color: $error-color;
+        margin-left: map-get($spacing, 1);
+      }
+    }
+
+    .input-wrapper {
+      position: relative;
+
+      input, select, textarea {
+        @include input-base;
+      }
+
+      textarea {
+        min-height: 100px;
+        resize: vertical;
+      }
+
+      .input-icon {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        color: $text-secondary;
+
+        &.left {
+          left: map-get($spacing, 3);
+          & + input { padding-left: map-get($spacing, 8); }
+        }
+
+        &.right {
+          right: map-get($spacing, 3);
+          & + input { padding-right: map-get($spacing, 8); }
+        }
+      }
+
+      .password-toggle {
+        position: absolute;
+        right: map-get($spacing, 3);
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: $text-secondary;
+        cursor: pointer;
+        padding: map-get($spacing, 1);
+
+        &:hover {
+          color: $text-primary;
+        }
+      }
+    }
+
+    .error-message {
+      @include typography(xs);
+      color: $error-color;
+      margin-top: map-get($spacing, 1);
+    }
+
+    .helper-text {
+      @include typography(xs);
+      color: $text-secondary;
+      margin-top: map-get($spacing, 1);
+    }
+  }
+
+  .checkbox-group {
+    @include flex(row, flex-start, center);
+    gap: map-get($spacing, 2);
+    margin-bottom: map-get($spacing, 4);
+
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+    }
+
+    label {
+      @include typography(sm);
+      margin: 0;
+    }
+  }
+
+  .radio-group {
+    @include flex(column, flex-start, flex-start);
+    gap: map-get($spacing, 2);
+    margin-bottom: map-get($spacing, 4);
+
+    .radio-option {
+      @include flex(row, flex-start, center);
+      gap: map-get($spacing, 2);
+
+      input[type="radio"] {
+        width: 18px;
+        height: 18px;
+        margin: 0;
+      }
+
+      label {
+        @include typography(sm);
+        margin: 0;
+      }
+    }
+  }
+
+  .form-actions {
+    @include flex(row, flex-end, center);
+    gap: map-get($spacing, 3);
+    margin-top: map-get($spacing, 6);
+
+    button {
+      @include button-base;
+      padding: map-get($spacing, 3) map-get($spacing, 6);
+
+      &.submit {
+        background-color: $primary-color;
+        color: white;
+
+        &:hover:not(:disabled) {
+          background-color: $primary-dark;
+        }
+      }
+
+      &.cancel {
+        background-color: $background-grey;
+        color: $text-primary;
+
+        &:hover:not(:disabled) {
+          background-color: darken($background-grey, 5%);
+        }
+      }
+    }
+  }
+} 

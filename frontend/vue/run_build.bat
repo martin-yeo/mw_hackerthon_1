@@ -1,1 +1,0 @@
-yarn build --dest dist/mw --watch --no-clean
