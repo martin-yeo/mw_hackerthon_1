@@ -1,45 +1,119 @@
 import React from 'react';
-import { RegisterForm } from '../components/auth/RegisterForm';
 import { Link } from 'react-router-dom';
+import { Card } from '../components/common/Card';
+import { RegisterForm } from '../components/auth/RegisterForm';
+import { SocialLogin } from '../components/auth/SocialLogin';
 
 export const Register = () => {
   return (
     <div className="register-page">
-      <div className="register-container">
-        <div className="header-section">
-          <Link to="/" className="back-link">
-            <i className="material-icons">arrow_back</i>
-          </Link>
+      <Card className="register-card">
+        <div className="register-header">
           <h1>회원가입</h1>
+          <p>FabLab 좌석 예약 시스템 회원이 되어주세요.</p>
         </div>
 
-        <div className="form-section">
-          <RegisterForm />
-        </div>
+        <RegisterForm />
 
-        <div className="info-section">
-          <h3>회원가입 시 유의사항</h3>
-          <ul>
-            <li>이메일 주소는 실제 사용하는 주소를 입력해주세요.</li>
-            <li>비밀번호는 8자 이상의 영문 대소문자, 숫자, 특수문자를 포함해야 합니다.</li>
-            <li>학번은 7자리 숫자로 입력해주세요.</li>
-            <li>연락처는 010-XXXX-XXXX 형식으로 입력해주세요.</li>
-          </ul>
-        </div>
+        <SocialLogin />
 
-        <div className="links-section">
+        <div className="register-footer">
           <p>
-            이미 계정이 있으신가요? 
-            <Link to="/login" className="login-link">
-              로그인하기
-            </Link>
+            이미 계정이 있으신가요?{' '}
+            <Link to="/login">로그인</Link>
           </p>
         </div>
-      </div>
 
-      <footer className="register-footer">
-        <p>© 2024 목원대학교 컴퓨터공학과. All rights reserved.</p>
-      </footer>
+        <div className="terms">
+          <p>
+            회원가입 시{' '}
+            <Link to="/terms">이용약관</Link>과{' '}
+            <Link to="/privacy">개인정보 처리방침</Link>에 동의하게 됩니다.
+          </p>
+        </div>
+      </Card>
+
+      <style jsx>{`
+        .register-page {
+          min-height: calc(100vh - var(--header-height));
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 2rem;
+          background-color: var(--background);
+        }
+
+        .register-card {
+          width: 100%;
+          max-width: 500px;
+        }
+
+        .register-header {
+          text-align: center;
+          margin-bottom: 2rem;
+        }
+
+        .register-header h1 {
+          margin: 0 0 0.5rem 0;
+          color: var(--text-primary);
+        }
+
+        .register-header p {
+          margin: 0;
+          color: var(--text-secondary);
+        }
+
+        .register-footer {
+          margin-top: 2rem;
+          text-align: center;
+          color: var(--text-secondary);
+        }
+
+        .register-footer p {
+          margin: 0.5rem 0;
+        }
+
+        .register-footer a {
+          color: var(--burgundy-red);
+          text-decoration: none;
+        }
+
+        .register-footer a:hover {
+          text-decoration: underline;
+        }
+
+        .terms {
+          margin-top: 1rem;
+          padding-top: 1rem;
+          border-top: 1px solid var(--border-color);
+          text-align: center;
+          font-size: 0.875rem;
+          color: var(--text-secondary);
+        }
+
+        .terms p {
+          margin: 0;
+        }
+
+        .terms a {
+          color: var(--burgundy-red);
+          text-decoration: none;
+        }
+
+        .terms a:hover {
+          text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+          .register-page {
+            padding: 1rem;
+          }
+
+          .register-card {
+            padding: 1.5rem;
+          }
+        }
+      `}</style>
     </div>
   );
 }; 

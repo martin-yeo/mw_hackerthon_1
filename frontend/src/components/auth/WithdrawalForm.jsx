@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import { useAuth } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
+import { Input } from '../common/Input';
+import { Button } from '../common/Button';
+import { TextArea } from '../common/TextArea';
 
 export const WithdrawalForm = () => {
   const navigate = useNavigate();
@@ -8,89 +11,162 @@ export const WithdrawalForm = () => {
   const [formData, setFormData] = useState({
     password: '',
     reason: '',
-    confirm: false
+    confirmation: ''
   });
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
-  const reasons = [
-    '서비스 이용 빈도가 낮음',
-    '다른 서비스 이용',
-    '불편한 사용성',
-    '개인정보 보호',
-    '기타'
-  ];
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    
+    if (!formData.password) {
+      newErrors.password = '비밀번호를 입력해주세요.';
+    }
+
+    if (!formData.reason.trim()) {
+      newErrors.reason = '탈퇴 사유를 입력해주세요.';
+    }
+
+    if (formData.confirmation !== '회원탈퇴') {
+      newErrors.confirmation = "'회원탈퇴'를 정확히 입력해주세요.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.confirm) {
-      setError('회원 탈퇴 확인에 동의해주세요.');
-      return;
-    }
+    if (!validateForm()) return;
 
+    const confirmed = window.confirm(
+      '정말로 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다.'
+    );
+
+    if (!confirmed) return;
+
+    setIsLoading(true);
     try {
       await withdraw(formData.password, formData.reason);
       navigate('/login');
-    } catch (err) {
-      setError('회원 탈퇴에 실패했습니다. 비밀번호를 확인해주세요.');
+    } catch (error) {
+      setErrors({
+        submit: error.response?.data?.message || '회원 탈퇴에 실패했습니다.'
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="withdrawal-form">
       <div className="warning-message">
-        <h3>회원 탈퇴 시 주의사항</h3>
-        <ul>
-          <li>모든 예약 정보가 삭제됩니다.</li>
-          <li>삭제된 정보는 복구할 수 없습니다.</li>
-          <li>탈퇴 후 재가입은 즉시 가능합니다.</li>
-        </ul>
+        <i className="material-icons">warning</i>
+        <p>
+          회원 탈퇴 시 모든 데이터가 삭제되며, 이 작업은 되돌릴 수 없습니다.
+          신중하게 결정해 주세요.
+        </p>
       </div>
 
       <div className="form-group">
-        <label>비밀번호 확인</label>
-        <input
+        <Input
           type="password"
+          name="password"
           value={formData.password}
-          onChange={(e) => setFormData({...formData, password: e.target.value})}
-          required
+          onChange={handleChange}
+          placeholder="비밀번호"
+          error={errors.password}
         />
       </div>
 
       <div className="form-group">
-        <label>탈퇴 사유</label>
-        <select
+        <TextArea
+          name="reason"
           value={formData.reason}
-          onChange={(e) => setFormData({...formData, reason: e.target.value})}
-          required
-        >
-          <option value="">선택해주세요</option>
-          {reasons.map(reason => (
-            <option key={reason} value={reason}>{reason}</option>
-          ))}
-        </select>
-        {formData.reason === '기타' && (
-          <textarea
-            placeholder="탈퇴 사유를 입력해주세요"
-            value={formData.customReason}
-            onChange={(e) => setFormData({...formData, customReason: e.target.value})}
-            required
-          />
-        )}
+          onChange={handleChange}
+          placeholder="탈퇴 사유를 입력해주세요."
+          error={errors.reason}
+          rows={4}
+        />
       </div>
 
       <div className="form-group">
-        <label className="checkbox-label">
-          <input
-            type="checkbox"
-            checked={formData.confirm}
-            onChange={(e) => setFormData({...formData, confirm: e.target.checked})}
-          />
-          위 주의사항을 모두 확인하였으며, 회원 탈퇴에 동의합니다.
-        </label>
+        <Input
+          type="text"
+          name="confirmation"
+          value={formData.confirmation}
+          onChange={handleChange}
+          placeholder="'회원탈퇴'를 입력해주세요."
+          error={errors.confirmation}
+        />
       </div>
 
-      {error && <div className="error-message">{error}</div>}
-      <button type="submit" className="submit-button danger">회원 탈퇴</button>
+      {errors.submit && (
+        <div className="error-message">{errors.submit}</div>
+      )}
+
+      <Button
+        type="submit"
+        variant="danger"
+        disabled={isLoading}
+        fullWidth
+      >
+        {isLoading ? '처리 중...' : '회원 탈퇴'}
+      </Button>
+
+      <style jsx>{`
+        .withdrawal-form {
+          width: 100%;
+          max-width: 400px;
+          margin: 0 auto;
+        }
+
+        .warning-message {
+          display: flex;
+          align-items: flex-start;
+          gap: 1rem;
+          padding: 1rem;
+          background-color: var(--warning-light);
+          border-radius: 4px;
+          margin-bottom: 2rem;
+        }
+
+        .warning-message i {
+          color: var(--warning);
+          font-size: 1.5rem;
+        }
+
+        .warning-message p {
+          color: var(--text-primary);
+          font-size: 0.875rem;
+          margin: 0;
+        }
+
+        .form-group {
+          margin-bottom: 1rem;
+        }
+
+        .error-message {
+          color: var(--error);
+          font-size: 0.875rem;
+          margin-bottom: 1rem;
+          text-align: center;
+        }
+      `}</style>
     </form>
   );
 }; 

@@ -1,20 +1,146 @@
 import React from 'react';
-import { SEAT_CONFIG } from '../../utils/constants';
+import { Card } from '../common/Card';
+import { SEAT_STATUS_COLORS } from '../../utils/constants';
 
-export const SeatGrid = ({ type, onSelect }) => {
-  const seats = {
-    '1인연구석': {
-      동쪽: ['동1', '동2', '동3', '동4', '동5', '동6'],
-      서쪽: ['서1', '서2', '서3', '서4', '서5', '서6']
-    },
-    '창가석': ['창가1', '창가2', '창가3', '창가4', '창가5', '창가6'],
-    '아이맥석': ['아이맥1', '아이맥2', '아이맥3'],
-    '팀프로젝트석': ['테이블1', '테이블2', '테이블3', '테이블4', '테이블5', '테이블6', '테이블7', '테이블8']
+export const SeatGrid = ({ 
+  seats = [], 
+  onSeatClick, 
+  selectedSeat = null,
+  showStatus = true,
+  showLabels = true,
+  gridSize = 'medium' 
+}) => {
+  const getSeatStatusColor = (status) => {
+    return SEAT_STATUS_COLORS[status] || SEAT_STATUS_COLORS.default;
+  };
+
+  const getSeatSize = () => {
+    switch (gridSize) {
+      case 'small': return 'seat-small';
+      case 'large': return 'seat-large';
+      default: return 'seat-medium';
+    }
   };
 
   return (
     <div className="seat-grid">
-      {/* 좌석 그리드 렌더링 */}
+      {seats.map((seat) => (
+        <Card 
+          key={seat.id}
+          className={`seat ${getSeatSize()} ${
+            selectedSeat === seat.id ? 'selected' : ''
+          }`}
+          onClick={() => onSeatClick && onSeatClick(seat)}
+        >
+          {showLabels && (
+            <div className="seat-label">{seat.name}</div>
+          )}
+          
+          {showStatus && (
+            <div 
+              className="status-indicator"
+              style={{ backgroundColor: getSeatStatusColor(seat.status) }}
+            />
+          )}
+
+          {seat.type === 'team' && (
+            <div className="team-indicator">
+              <i className="material-icons">group</i>
+              <span>{seat.capacity}인</span>
+            </div>
+          )}
+        </Card>
+      ))}
+
+      <style jsx>{`
+        .seat-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+          gap: 1rem;
+          padding: 1rem;
+        }
+
+        .seat {
+          position: relative;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .seat:hover {
+          transform: translateY(-2px);
+          box-shadow: var(--shadow-md);
+        }
+
+        .seat.selected {
+          border: 2px solid var(--burgundy-red);
+        }
+
+        .seat-small {
+          height: 80px;
+        }
+
+        .seat-medium {
+          height: 120px;
+        }
+
+        .seat-large {
+          height: 160px;
+        }
+
+        .seat-label {
+          font-weight: 500;
+          margin-bottom: 0.5rem;
+        }
+
+        .status-indicator {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          position: absolute;
+          top: 0.5rem;
+          right: 0.5rem;
+        }
+
+        .team-indicator {
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+          color: var(--text-secondary);
+          font-size: 0.875rem;
+        }
+
+        .team-indicator i {
+          font-size: 1rem;
+        }
+
+        @media (max-width: 768px) {
+          .seat-grid {
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 0.5rem;
+            padding: 0.5rem;
+          }
+
+          .seat-small {
+            height: 60px;
+          }
+
+          .seat-medium {
+            height: 90px;
+          }
+
+          .seat-large {
+            height: 120px;
+          }
+
+          .seat-label {
+            font-size: 0.875rem;
+          }
+        }
+      `}</style>
     </div>
   );
 }; 
