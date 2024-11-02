@@ -4,20 +4,34 @@ export const OPERATING_HOURS = {
 };
 
 export const SEAT_TYPES = {
-  SINGLE: '1인연구석',
-  WINDOW: '창가석',
-  IMAC: '아이맥석',
-  TEAM: '팀프로젝트석'
+  INDIVIDUAL: {
+    EAST: ['동1', '동2', '동3', '동4', '동5', '동6'],
+    WEST: ['서1', '서2', '서3', '서4', '서5', '서6']
+  },
+  WINDOW: ['창가1', '창가2', '창가3', '창가4', '창가5', '창가6'],
+  IMAC: ['아이맥1', '아이맥2', '아이맥3'],
+  TEAM: ['테이블1', '테이블2', '테이블3', '테이블4', '테이블5', '테이블6', '테이블7', '테이블8']
 };
 
 export const SEAT_CONFIG = {
-  [SEAT_TYPES.SINGLE]: {
+  [SEAT_TYPES.INDIVIDUAL]: {
     count: 12,
     maxDuration: 240, // 4시간
     minDuration: 60,  // 1시간
     layout: {
       rows: 3,
       cols: 4
+    }
+  },
+  [SEAT_TYPES.TEAM]: {
+    count: 4,
+    maxDuration: 240, // 4시간
+    minDuration: 120, // 2시간
+    minTeamSize: 2,
+    maxTeamSize: 6,
+    layout: {
+      rows: 2,
+      cols: 2
     }
   },
   [SEAT_TYPES.WINDOW]: {
@@ -37,17 +51,6 @@ export const SEAT_CONFIG = {
       rows: 1,
       cols: 3
     }
-  },
-  [SEAT_TYPES.TEAM]: {
-    count: 4,
-    maxDuration: 240, // 4시간
-    minDuration: 120, // 2시간
-    minTeamSize: 2,
-    maxTeamSize: 6,
-    layout: {
-      rows: 2,
-      cols: 2
-    }
   }
 };
 
@@ -66,10 +69,9 @@ export const RESERVATION_STATUS_KO = {
 };
 
 export const RESERVATION_PURPOSES = [
-  '개인학습',
   '팀프로젝트',
-  '온라인강의',
-  '과제작업',
+  '개인학습',
+  '조별학습',
   '회의',
   '기타'
 ];
@@ -80,35 +82,57 @@ export const USER_ROLES = {
 };
 
 export const ERROR_MESSAGES = {
-  NETWORK_ERROR: '네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
-  SERVER_ERROR: '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
-  UNAUTHORIZED: '로그인이 필요한 서비스입니다.',
-  FORBIDDEN: '접근 권한이 없습니다.',
-  NOT_FOUND: '요청하신 페이지를 찾을 수 없습니다.',
-  VALIDATION_ERROR: '입력값을 확인해주세요.',
-  DUPLICATE_RESERVATION: '해당 시간에 이미 예약이 있습니다.',
-  SEAT_NOT_AVAILABLE: '선택하신 좌석은 이미 예약되었습니다.'
+  REQUIRED: '필수 입력 항목입니다.',
+  INVALID_EMAIL: '올바른 이메일 형식이 아닙니다.',
+  INVALID_PASSWORD: '비밀번호는 8자 이상의 영문 대소문자, 숫자, 특수문자를 포함해야 합니다.',
+  INVALID_STUDENT_ID: '학번은 7자리 숫자여야 합니다.',
+  INVALID_PHONE: '올바른 전화번호 형식이 아닙니다. (010-XXXX-XXXX)',
+  DUPLICATE_STUDENT_ID: '이미 등록된 학번입니다.',
+  DUPLICATE_PHONE: '이미 등록된 전화번호입니다.',
+  LOGIN_FAILED: '로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.',
+  SERVER_ERROR: '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
 };
 
 export const API_ENDPOINTS = {
   AUTH: {
-    LOGIN: '/auth/login',
-    REGISTER: '/auth/register',
-    LOGOUT: '/auth/logout',
-    ME: '/auth/me',
-    REFRESH: '/auth/refresh'
+    LOGIN: '/auth/local',
+    REGISTER: '/auth/local/register',
+    FORGOT_PASSWORD: '/auth/forgot-password',
+    RESET_PASSWORD: '/auth/reset-password',
+    CHANGE_PASSWORD: '/auth/change-password'
   },
   RESERVATIONS: {
     LIST: '/reservations',
     CREATE: '/reservations',
-    CANCEL: (id) => `/reservations/${id}/cancel`,
-    DETAIL: (id) => `/reservations/${id}`,
-    CHECK: '/reservations/check'
+    UPDATE: (id) => `/reservations/${id}`,
+    DELETE: (id) => `/reservations/${id}`,
+    APPROVE: (id) => `/reservations/${id}/approve`,
+    REJECT: (id) => `/reservations/${id}/reject`
   },
-  ADMIN: {
-    USERS: '/admin/users',
-    STATS: '/admin/stats',
-    APPROVE: (id) => `/admin/reservations/${id}/approve`,
-    REJECT: (id) => `/admin/reservations/${id}/reject`
+  SEATS: {
+    LIST: '/seats',
+    AVAILABILITY: (id) => `/seats/${id}/availability`
+  },
+  USERS: {
+    ME: '/users/me',
+    UPDATE: (id) => `/users/${id}`,
+    DELETE: (id) => `/users/${id}`
   }
+};
+
+export const GOOGLE_CALENDAR_CONFIG = {
+  API_KEY: process.env.REACT_APP_GOOGLE_API_KEY,
+  CLIENT_ID: process.env.REACT_APP_GOOGLE_CLIENT_ID,
+  CALENDAR_ID: 'primary'
+};
+
+export const COLORS = {
+  PRIMARY: '#901C1C',
+  SECONDARY: '#6C757D',
+  SUCCESS: '#28A745',
+  WARNING: '#FFC107',
+  ERROR: '#DC3545',
+  INFO: '#17A2B8',
+  LIGHT: '#F8F9FA',
+  DARK: '#343A40'
 }; 

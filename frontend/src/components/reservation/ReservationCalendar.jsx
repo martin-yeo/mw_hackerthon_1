@@ -1,63 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
-import moment from 'moment';
-import 'moment/locale/ko';
-import { useReservation } from '../../hooks/useReservation';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
-
-moment.locale('ko');
-const localizer = momentLocalizer(moment);
+import React, { useEffect } from 'react';
+import { useCalendar } from '../../hooks/useCalendar';
+import { Loading } from '../common/Loading';
 
 export const ReservationCalendar = () => {
-  const [events, setEvents] = useState([]);
-  const { getReservations } = useReservation();
+  const { events, loading, error, fetchEvents } = useCalendar();
 
   useEffect(() => {
-    const loadReservations = async () => {
-      const reservations = await getReservations();
-      const formattedEvents = reservations.map(reservation => ({
-        id: reservation.id,
-        title: `${reservation.seatInfo} - ${reservation.userName}`,
-        start: new Date(`${reservation.date}T${reservation.startTime}`),
-        end: new Date(`${reservation.date}T${reservation.endTime}`),
-        resource: reservation
-      }));
-      setEvents(formattedEvents);
-    };
-
-    loadReservations();
+    const startDate = new Date();
+    const endDate = new Date();
+    endDate.setMonth(endDate.getMonth() + 1);
+    
+    fetchEvents(startDate, endDate);
   }, []);
 
-  const eventStyleGetter = (event) => {
-    const style = {
-      backgroundColor: '#800020', // 버건디 컬러
-      borderRadius: '5px',
-      color: 'white',
-      border: 'none'
-    };
-    return { style };
-  };
+  if (loading) return <Loading />;
+  if (error) return <div className="error-message">{error}</div>;
 
   return (
     <div className="calendar-container">
-      <Calendar
-        localizer={localizer}
-        events={events}
-        startAccessor="start"
-        endAccessor="end"
-        style={{ height: 600 }}
-        eventPropGetter={eventStyleGetter}
-        messages={{
-          next: "다음",
-          previous: "이전",
-          today: "오늘",
-          month: "월",
-          week: "주",
-          day: "일",
-          agenda: "일정"
-        }}
-        views={['month', 'week', 'day']}
-      />
+      {/* 캘린더 렌더링 로직 */}
+      {events.map(event => (
+        <div key={event.id} className="calendar-event">
+          <h3>{event.summary}</h3>
+          <p>{new Date(event.start.dateTime).toLocaleString()}</p>
+        </div>
+      ))}
     </div>
   );
 }; 

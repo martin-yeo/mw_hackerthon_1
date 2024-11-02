@@ -1,67 +1,49 @@
 import React from 'react';
 
-export const Loading = ({ 
-  size = 'medium', 
-  color = '#800020',
-  fullScreen = false,
-  text = '로딩 중...'
-}) => {
+export const Loading = ({ size = 'medium', fullScreen = false }) => {
   const getSize = () => {
     switch (size) {
-      case 'small':
-        return 24;
-      case 'large':
-        return 48;
-      case 'medium':
-      default:
-        return 36;
+      case 'small': return '24px';
+      case 'large': return '48px';
+      default: return '36px';
     }
   };
 
-  const spinnerSize = getSize();
-
   return (
-    <div className={`loading-container ${fullScreen ? 'fullscreen' : ''}`}>
+    <div className={`loading-wrapper ${fullScreen ? 'fullscreen' : ''}`}>
       <div className="spinner"></div>
-      {text && <p className="loading-text">{text}</p>}
-
+      
       <style jsx>{`
-        .loading-container {
+        .loading-wrapper {
           display: flex;
-          flex-direction: column;
-          align-items: center;
           justify-content: center;
-          padding: 20px;
+          align-items: center;
+          padding: 2rem;
         }
 
-        .loading-container.fullscreen {
+        .fullscreen {
           position: fixed;
           top: 0;
           left: 0;
           right: 0;
           bottom: 0;
-          background-color: rgba(255, 255, 255, 0.9);
-          z-index: 9999;
+          background: rgba(255, 255, 255, 0.9);
+          z-index: 1000;
         }
 
         .spinner {
-          width: ${spinnerSize}px;
-          height: ${spinnerSize}px;
-          border: 3px solid #f3f3f3;
-          border-top: 3px solid ${color};
+          width: ${getSize()};
+          height: ${getSize()};
+          border: 3px solid var(--burgundy-gray);
+          border-top-color: var(--burgundy-red);
           border-radius: 50%;
           animation: spin 1s linear infinite;
         }
 
-        .loading-text {
-          margin-top: 12px;
-          color: #666;
-          font-size: ${size === 'small' ? '14px' : '16px'};
-        }
-
         @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
+          to {
+            transform: rotate(360deg);
+          }
         }
       `}</style>
     </div>

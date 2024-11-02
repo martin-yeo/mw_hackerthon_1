@@ -2,14 +2,19 @@ import { format, addDays, isAfter, isBefore, isSameDay, parseISO } from 'date-fn
 import { ko } from 'date-fns/locale';
 
 export const formatDate = (date) => {
-  if (!date) return '';
-  const parsedDate = typeof date === 'string' ? parseISO(date) : date;
-  return format(parsedDate, 'yyyy년 MM월 dd일', { locale: ko });
+  return new Date(date).toLocaleDateString('ko-KR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
 };
 
 export const formatTime = (time) => {
-  if (!time) return '';
-  return time.substring(0, 5); // "HH:mm" 형식으로 변환
+  return new Date(`1970-01-01T${time}`).toLocaleTimeString('ko-KR', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  });
 };
 
 export const formatDateTime = (date, time) => {
@@ -33,18 +38,11 @@ export const isWeekend = (date) => {
   return day === 0 || day === 6;
 };
 
-export const getTimeSlots = (startTime, endTime, interval = 30) => {
+export const getTimeSlots = () => {
   const slots = [];
-  let currentTime = startTime;
-
-  while (currentTime < endTime) {
-    slots.push(currentTime);
-    const [hours, minutes] = currentTime.split(':').map(Number);
-    const date = new Date();
-    date.setHours(hours, minutes + interval);
-    currentTime = `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+  for (let hour = 9; hour < 22; hour++) {
+    slots.push(`${hour.toString().padStart(2, '0')}:00`);
   }
-
   return slots;
 };
 
@@ -70,4 +68,76 @@ export const isOverlapping = (start1, end1, start2, end2) => {
     (isBefore(start1, end2) || isSameDay(start1, end2)) && 
     (isAfter(end1, start2) || isSameDay(end1, start2))
   );
+};
+
+export const isTimeSlotAvailable = (timeSlot, existingReservations) => {
+  return !existingReservations.some(reservation => 
+    reservation.startTime <= timeSlot && reservation.endTime > timeSlot
+  );
+};
+
+export const getWeekDates = (date = new Date()) => {
+  const week = [];
+  const current = new Date(date);
+  current.setDate(current.getDate() - current.getDay());
+
+  for (let i = 0; i < 7; i++) {
+    week.push(new Date(current));
+    current.setDate(current.getDate() + 1);
+  }
+  return week;
+};
+
+export const getMonthDates = (year, month) => {
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  const dates = [];
+
+  // 이전 달의 날짜들
+  const prevMonthDays = firstDay.getDay();
+  const prevMonth = new Date(year, month - 1, 0);
+  for (let i = prevMonthDays - 1; i >= 0; i--) {
+    dates.push({
+      date: new Date(year, month - 1, prevMonth.getDate() - i),
+      isCurrentMonth: false
+    });
+  }
+
+  // 현재 달의 날짜들
+  for (let date = 1; date <= lastDay.getDate(); date++) {
+    dates.push({
+      date: new Date(year, month, date),
+      isCurrentMonth: true
+    });
+  }
+
+  // 다음 달의 날짜들
+  const remainingDays = 42 - dates.length; // 6주 달력을 위해
+  for (let i = 1; i <= remainingDays; i++) {
+    dates.push({
+      date: new Date(year, month + 1, i),
+      isCurrentMonth: false
+    });
+  }
+
+  return dates;
+};
+
+export const isSameDay = (date1, date2) => {
+  return (
+    date1.getFullYear() === date2.getFullYear() &&
+    date1.getMonth() === date2.getMonth() &&
+    date1.getDate() === date2.getDate()
+  );
+};
+
+export const addDays = (date, days) => {
+  const result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+};
+
+export const isWithinOperatingHours = (time) => {
+  const [hours] = time.split(':').map(Number);
+  return hours >= 9 && hours < 22;
 }; 

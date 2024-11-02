@@ -1,38 +1,46 @@
 export const validateEmail = (email) => {
   const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-  if (!email) return '이메일을 입력해주세요.';
-  if (!regex.test(email)) return '올바른 이메일 형식이 아닙니다.';
-  return '';
+  return regex.test(email);
 };
 
 export const validatePassword = (password) => {
-  if (!password) return '비밀번호를 입력해주세요.';
-  if (password.length < 8) return '비밀번호는 8자 이상이어야 합니다.';
-  if (!/[A-Z]/.test(password)) return '대문자를 포함해야 합니다.';
-  if (!/[a-z]/.test(password)) return '소문자를 포함해야 합니다.';
-  if (!/[0-9]/.test(password)) return '숫자를 포함해야 합니다.';
-  if (!/[!@#$%^&*]/.test(password)) return '특수문자(!@#$%^&*)를 포함해야 합니다.';
-  return '';
+  const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  return regex.test(password);
 };
 
 export const validateStudentId = (studentId) => {
   const regex = /^\d{7}$/;
-  if (!studentId) return '학번을 입력해주세요.';
-  if (!regex.test(studentId)) return '학번은 7자리 숫자여야 합니다.';
-  return '';
+  return regex.test(studentId);
 };
 
-export const validatePhone = (phone) => {
+export const validatePhoneNumber = (phone) => {
   const regex = /^010-\d{4}-\d{4}$/;
-  if (!phone) return '연락처를 입력해주세요.';
-  if (!regex.test(phone)) return '올바른 연락처 형식이 아닙니다. (예: 010-1234-5678)';
-  return '';
+  return regex.test(phone);
 };
 
-export const validateName = (name) => {
-  if (!name) return '이름을 입력해주세요.';
-  if (name.length < 2) return '이름은 2자 이상이어야 합니다.';
-  if (name.length > 10) return '이름은 10자 이하여야 합니다.';
+export const validateReservationTime = (startTime, endTime) => {
+  const start = new Date(`1970-01-01T${startTime}`);
+  const end = new Date(`1970-01-01T${endTime}`);
+  
+  const openTime = new Date(`1970-01-01T09:00`);
+  const closeTime = new Date(`1970-01-01T22:00`);
+  
+  return (
+    start >= openTime &&
+    end <= closeTime &&
+    start < end &&
+    (end - start) <= 3600000 * 3
+  );
+};
+
+export const validateReservationPurpose = (purpose, otherPurpose = '') => {
+  const validPurposes = ['팀프로젝트', '개인학습', '조별학습', '회의', '기타'];
+  if (!validPurposes.includes(purpose)) {
+    return '올바른 예약 목적을 선택해주세요.';
+  }
+  if (purpose === '기타' && !otherPurpose) {
+    return '기타 목적을 입력해주세요.';
+  }
   return '';
 };
 
@@ -69,6 +77,14 @@ export const validateReservation = (reservationData) => {
     } else if (reservationData.teamSize < 2 || reservationData.teamSize > 6) {
       errors.teamSize = '팀 인원은 2-6명이어야 합니다.';
     }
+  }
+
+  if (!validateReservationTime(reservationData.startTime, reservationData.endTime)) {
+    errors.time = '올바른 예약 시간을 선택해주세요.';
+  }
+
+  if (!validateReservationPurpose(reservationData.purpose, reservationData.customPurpose)) {
+    errors.purpose = validateReservationPurpose(reservationData.purpose, reservationData.customPurpose);
   }
 
   return errors;
