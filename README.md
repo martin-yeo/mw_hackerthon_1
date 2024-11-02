@@ -22,7 +22,6 @@
     - 비번은 최소 8자 이상 영문 대소문자, 숫자, 특수문자 조합으로 설정
     - 학번은 숫자 7자리로 설정
     - 연락처는 휴대전화 번호로 설정(010-xxxx-xxxx)
-    - 회원가입 시 이메일 인증 기능 추가
     - 회원가입 시 학번 중복 체크 기능 추가
     - 회원가입 시 연락처 중복 체크 기능 추가
     - github 로그인 기능 추가
@@ -93,9 +92,62 @@
 - 구글 캘린더 API : https://developers.google.com/calendar/api/guides/concepts/calendars
 - 구글 캘린더 예제 : https://github.com/googleapis/google-api-python-client/tree/main/examples/calendar_quickstart
 - 구글 캘린더 라이브러리 : https://github.com/googleapis/google-api-python-client
-- 구글 캘린더 라이브러리 설치 : https://googleapis.dev/python/google-api-core/latest/auth.html
+- 구글 캘린더 라이브러 설치 : https://googleapis.dev/python/google-api-core/latest/auth.html
 
 ## 디자인 참고 사이트
 - 목원대학교 홈페이지 : https://www.mokwon.ac.kr/
 - 목원대학교 컴퓨터공학과 : https://www.mokwon.ac.kr/computer/
 
+## 기술 스택
+- Backend: Strapi (Headless CMS)
+  - Node.js v18 이상 필요
+  - MySQL 데이터베이스 사용
+- Frontend: React
+- 인증: Strapi 기본 인증 + OAuth 2.0
+- API 문서화: Strapi 자동 생성 API 문서
+
+## 시스템 아키텍처
+```mermaid
+graph TD
+    Client[React Frontend] --> Strapi[Strapi CMS]
+    Strapi --> DB[(MySQL Database)]
+    Strapi --> Calendar[Google Calendar API]
+    Strapi --> Email[이메일 알림]
+    Strapi --> OAuth[소셜 로그인]
+```
+
+## 개발 환경 설정
+1. 사전 요구사항
+   - Node.js v18 이상
+   - MySQL v8.0 이상
+   - yarn 또는 npm
+
+2. Strapi 설치 및 실행
+   ```bash
+   npx create-strapi-app@latest fablab-backend
+   cd fablab-backend
+   yarn develop # 또는 npm run develop
+   ```
+
+3. 환경 변수 설정 (.env)
+   ```
+   DATABASE_HOST=localhost
+   DATABASE_PORT=3306
+   DATABASE_NAME=fablab
+   DATABASE_USERNAME=your-username
+   DATABASE_PASSWORD=your-password
+   GOOGLE_CALENDAR_API_KEY=your-key
+   OAUTH_GITHUB_CLIENT_ID=your-client-id
+   OAUTH_GITHUB_CLIENT_SECRET=your-client-secret
+   // ... 기타 OAuth 설정
+   ```
+
+4. 콘텐츠 타입 설정
+   - 사용자 (Users)
+   - 예약 (Reservations)
+   - 좌석 (Seats)
+   - 예약 목적 (Purposes)
+
+## API 엔드포인트
+Strapi에서 자동으로 생성되는 REST API 엔드포인트:
+- `POST /api/auth/local/register`
