@@ -1,149 +1,139 @@
 import React from 'react';
 import { Button } from '../common/Button';
+import { useAuth } from '../../hooks/useAuth';
 
 export const SocialLogin = () => {
-  const handleSocialLogin = (provider) => {
-    window.location.href = `${process.env.REACT_APP_API_URL}/api/connect/${provider}`;
+  const { loginWithProvider } = useAuth();
+
+  const handleSocialLogin = async (provider) => {
+    try {
+      await loginWithProvider(provider);
+    } catch (error) {
+      console.error(`${provider} 로그인 실패:`, error);
+    }
   };
 
   return (
     <div className="social-login">
-      <div className="divider">
-        <span>또는</span>
-      </div>
+      <Button
+        variant="outlined"
+        fullWidth
+        className="social-button google"
+        onClick={() => handleSocialLogin('google')}
+      >
+        <img src="/images/social/google.svg" alt="Google" />
+        Google로 계속하기
+      </Button>
 
-      <div className="social-buttons">
-        <Button 
-          variant="outlined"
-          onClick={() => handleSocialLogin('github')}
-          className="github"
-          fullWidth
-        >
-          <i className="material-icons">code</i>
-          GitHub로 계속하기
-        </Button>
+      <Button
+        variant="outlined"
+        fullWidth
+        className="social-button kakao"
+        onClick={() => handleSocialLogin('kakao')}
+      >
+        <img src="/images/social/kakao.svg" alt="Kakao" />
+        카카오로 계속하기
+      </Button>
 
-        <Button 
-          variant="outlined"
-          onClick={() => handleSocialLogin('google')}
-          className="google"
-          fullWidth
-        >
-          <i className="material-icons">mail</i>
-          Google로 계속하기
-        </Button>
+      <Button
+        variant="outlined"
+        fullWidth
+        className="social-button naver"
+        onClick={() => handleSocialLogin('naver')}
+      >
+        <img src="/images/social/naver.svg" alt="Naver" />
+        네이버로 계속하기
+      </Button>
 
-        <Button 
-          variant="outlined"
-          onClick={() => handleSocialLogin('kakao')}
-          className="kakao"
-          fullWidth
-        >
-          <img src="/icons/kakao.svg" alt="kakao" />
-          카카오로 계속하기
-        </Button>
-
-        <Button 
-          variant="outlined"
-          onClick={() => handleSocialLogin('naver')}
-          className="naver"
-          fullWidth
-        >
-          <img src="/icons/naver.svg" alt="naver" />
-          네이버로 계속하기
-        </Button>
-
-        <Button 
-          variant="outlined"
-          onClick={() => handleSocialLogin('facebook')}
-          className="facebook"
-          fullWidth
-        >
-          <i className="material-icons">facebook</i>
-          Facebook으로 계속하기
-        </Button>
-      </div>
+      <Button
+        variant="outlined"
+        fullWidth
+        className="social-button github"
+        onClick={() => handleSocialLogin('github')}
+      >
+        <img src="/images/social/github.svg" alt="GitHub" />
+        GitHub로 계속하기
+      </Button>
 
       <style jsx>{`
         .social-login {
-          width: 100%;
-          max-width: 400px;
-          margin: 2rem auto;
-        }
-
-        .divider {
-          position: relative;
-          text-align: center;
-          margin: 1.5rem 0;
-        }
-
-        .divider::before,
-        .divider::after {
-          content: '';
-          position: absolute;
-          top: 50%;
-          width: 45%;
-          height: 1px;
-          background-color: var(--border-color);
-        }
-
-        .divider::before {
-          left: 0;
-        }
-
-        .divider::after {
-          right: 0;
-        }
-
-        .divider span {
-          background-color: white;
-          padding: 0 1rem;
-          color: var(--text-secondary);
-          font-size: 0.875rem;
-        }
-
-        .social-buttons {
           display: flex;
           flex-direction: column;
           gap: 1rem;
         }
 
-        .social-buttons :global(.github) {
-          color: #24292e;
-          border-color: #24292e;
+        .social-button {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.75rem;
+          height: 2.75rem;
+          border-radius: 4px;
+          font-size: 0.875rem;
+          font-weight: 500;
+          transition: all 0.2s;
         }
 
-        .social-buttons :global(.google) {
-          color: #4285f4;
+        .social-button img {
+          width: 1.25rem;
+          height: 1.25rem;
+        }
+
+        .social-button.google {
           border-color: #4285f4;
+          color: #4285f4;
         }
 
-        .social-buttons :global(.kakao) {
+        .social-button.google:hover {
+          background-color: #4285f4;
+          color: white;
+        }
+
+        .social-button.kakao {
+          border-color: #fee500;
           color: #000000;
-          border-color: #FEE500;
-          background-color: #FEE500;
+          background-color: #fee500;
         }
 
-        .social-buttons :global(.naver) {
-          color: #ffffff;
-          border-color: #03C75A;
-          background-color: #03C75A;
+        .social-button.kakao:hover {
+          background-color: #fada0a;
         }
 
-        .social-buttons :global(.facebook) {
-          color: #1877f2;
-          border-color: #1877f2;
+        .social-button.naver {
+          border-color: #03c75a;
+          color: white;
+          background-color: #03c75a;
         }
 
-        .social-buttons i {
-          margin-right: 0.5rem;
-          font-size: 1.25rem;
+        .social-button.naver:hover {
+          background-color: #02b351;
         }
 
-        .social-buttons img {
-          width: 20px;
-          height: 20px;
-          margin-right: 0.5rem;
+        .social-button.github {
+          border-color: #24292e;
+          color: #24292e;
+        }
+
+        .social-button.github:hover {
+          background-color: #24292e;
+          color: white;
+        }
+
+        @media (hover: none) {
+          .social-button:hover {
+            background-color: transparent;
+            color: inherit;
+          }
+
+          .social-button.kakao:hover {
+            background-color: #fee500;
+            color: #000000;
+          }
+
+          .social-button.naver:hover {
+            background-color: #03c75a;
+            color: white;
+          }
         }
       `}</style>
     </div>

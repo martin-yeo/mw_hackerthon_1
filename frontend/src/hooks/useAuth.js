@@ -1,115 +1,130 @@
-import { useState, useEffect, useContext, useCallback } from 'react';
-import { AuthContext } from '../contexts/AuthContext';
-import { api } from '../utils/api';
-import { setToken, removeToken, getToken } from '../utils/localStorage';
+import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { authApi } from '../api/authApi';
+import { setAuthToken, removeAuthToken, getAuthToken } from '../utils/auth';
 
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-
-  const { user, setUser } = context;
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    checkAuth();
+  const loadUser = useCallback(async () => {
+    try {
+      const token = getAuthToken();
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+
+      const response = await authApi.getCurrentUser();
+      setUser(response.data);
+    } catch (error) {
+      console.error('사용자 정보 로딩 실패:', error);
+      removeAuthToken();
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  const checkAuth = async () => {
-    const token = getToken();
-    if (token) {
-      try {
-        const response = await api.get('/auth/me');
-        setUser(response.data);
-      } catch (error) {
-        removeToken();
-        setUser(null);
-      }
-    }
-    setLoading(false);
-  };
+  useEffect(() => {
+    loadUser();
+  }, [loadUser]);
 
   const login = async (email, password, rememberMe = false) => {
     try {
-      setError(null);
-      const response = await api.post('/auth/login', { email, password });
-      const { token, user } = response.data;
+      const response = await authApi.login({ email, password });
+      const { token, user: userData } = response.data;
       
-      if (rememberMe) {
-        setToken(token);
-      }
+      setAuthToken(token, rememberMe);
+      setUser(userData);
       
-      setUser(user);
-      return user;
+      navigate('/');
+      return userData;
     } catch (error) {
-      setError(error.response?.data?.message || '로그인에 실패했습니다.');
       throw error;
     }
   };
 
   const register = async (userData) => {
     try {
-      setError(null);
-      const response = await api.post('/auth/register', userData);
-      return response.data;
+      const response = await authApi.register(userData);
+      const { token, user: newUser } = response.data;
+      
+      setAuthToken(token);
+      setUser(newUser);
+      
+      navigate('/');
+      return newUser;
     } catch (error) {
-      setError(error.response?.data?.message || '회원가입에 실패했습니다.');
       throw error;
     }
   };
 
-  const logout = useCallback(async () => {
+  const logout = async () => {
     try {
-      await api.post('/auth/logout');
+      await authApi.logout();
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error('로그아웃 실패:', error);
     } finally {
-      removeToken();
+      removeAuthToken();
       setUser(null);
+      navigate('/auth/login');
     }
-  }, [setUser]);
+  };
 
-  const resetPassword = async (email) => {
+  const loginWithProvider = async (provider) => {
     try {
-      setError(null);
-      await api.post('/auth/reset-password', { email });
+      const response = await authApi.socialLogin(provider);
+      const { token, user: userData } = response.data;
+      
+      setAuthToken(token);
+      setUser(userData);
+      
+      navigate('/');
+      return userData;
     } catch (error) {
-      setError(error.response?.data?.message || '비밀번호 재설정 요청에 실패했습니다.');
       throw error;
     }
   };
 
-  const updatePassword = async (currentPassword, newPassword) => {
+  const requestPasswordReset = async (email) => {
     try {
-      setError(null);
-      await api.put('/auth/password', { currentPassword, newPassword });
+      await authApi.requestPasswordReset(email);
     } catch (error) {
-      setError(error.response?.data?.message || '비밀번호 변경에 실패했습니다.');
       throw error;
     }
   };
 
-  const updateProfile = async (profileData) => {
+  const verifyResetToken = async (token) => {
     try {
-      setError(null);
-      const response = await api.put('/auth/profile', profileData);
+      await authApi.verifyResetToken(token);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const resetPassword = async (token, newPassword) => {
+    try {
+      await authApi.resetPassword(token, newPassword);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const updateProfile = async (userData) => {
+    try {
+      const response = await authApi.updateProfile(userData);
       setUser(response.data);
       return response.data;
     } catch (error) {
-      setError(error.response?.data?.message || '프로필 업데이트에 실패했습니다.');
       throw error;
     }
   };
 
-  const verifyEmail = async (token) => {
+  const changePassword = async (currentPassword, newPassword) => {
     try {
-      setError(null);
-      const response = await api.post('/auth/verify-email', { token });
-      return response.data;
+      await authApi.changePassword(currentPassword, newPassword);
     } catch (error) {
-      setError(error.response?.data?.message || '이메일 인증에 실패했습니다.');
       throw error;
     }
   };
@@ -117,15 +132,14 @@ export const useAuth = () => {
   return {
     user,
     loading,
-    error,
     login,
     register,
     logout,
+    loginWithProvider,
+    requestPasswordReset,
+    verifyResetToken,
     resetPassword,
-    updatePassword,
     updateProfile,
-    verifyEmail,
-    isAuthenticated: !!user,
-    isAdmin: user?.role === 'admin'
+    changePassword
   };
 }; 

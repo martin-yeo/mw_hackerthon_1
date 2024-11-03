@@ -1,7 +1,7 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../utils/api';
-import { getToken, setToken, removeToken } from '../utils/localStorage';
+import { authApi } from '../api/authApi';
+import { setAuthToken, removeAuthToken, getAuthToken } from '../utils/auth';
 import { Loading } from '../components/common/Loading';
 
 export const AuthContext = createContext(null);
@@ -9,91 +9,113 @@ export const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loginAttempts, setLoginAttempts] = useState(0);
+  const [loginBlockedUntil, setLoginBlockedUntil] = useState(null);
   const navigate = useNavigate();
+
+  const checkAuthStatus = useCallback(async () => {
+    try {
+      const token = getAuthToken();
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+
+      const response = await authApi.getCurrentUser();
+      setUser(response.data);
+    } catch (error) {
+      console.error('인증 상태 확인 실패:', error);
+      removeAuthToken();
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     checkAuthStatus();
-  }, []);
+  }, [checkAuthStatus]);
 
-  // 토큰 기반 인증 상태 확인
-  const checkAuthStatus = async () => {
-    const token = getToken();
-    if (token) {
-      try {
-        const response = await api.get('/auth/me');
-        setUser(response.data);
-        // API 요청에 토큰 자동 포함
-        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      } catch (error) {
-        console.error('Auth check failed:', error);
-        removeToken();
-        delete api.defaults.headers.common['Authorization'];
-      }
-    }
-    setLoading(false);
-  };
-
-  // 로그인 상태 변경 시 API 헤더 업데이트
-  useEffect(() => {
-    if (user) {
-      const token = getToken();
-      if (token) {
-        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      }
-    } else {
-      delete api.defaults.headers.common['Authorization'];
-    }
-  }, [user]);
-
-  // 인증이 필요한 라우트 보호
-  const requireAuth = (element) => {
-    if (loading) {
-      return <Loading />;
+  const login = async (email, password, rememberMe = false) => {
+    if (loginBlockedUntil && new Date() < loginBlockedUntil) {
+      const remainingTime = Math.ceil((loginBlockedUntil - new Date()) / 1000);
+      throw new Error(`로그인이 일시적으로 제한되었습니다. ${remainingTime}초 후에 다시 시도해주세요.`);
     }
 
-    if (!user) {
-      navigate('/auth/login', { 
-        state: { from: window.location.pathname }
-      });
-      return null;
-    }
-
-    return element;
-  };
-
-  // 관리자 권한 확인
-  const requireAdmin = (element) => {
-    if (loading) {
-      return <Loading />;
-    }
-
-    if (!user || user.role !== 'admin') {
+    try {
+      const response = await authApi.login({ email, password });
+      const { token, user: userData } = response.data;
+      
+      setAuthToken(token, rememberMe);
+      setUser(userData);
+      setLoginAttempts(0);
+      setLoginBlockedUntil(null);
+      
       navigate('/');
-      return null;
-    }
-
-    return element;
-  };
-
-  // 세션 만료 처리
-  const handleSessionExpired = () => {
-    setUser(null);
-    removeToken();
-    navigate('/auth/login', {
-      state: { 
-        from: window.location.pathname,
-        message: '세션이 만료되었습니다. 다시 로그인해주세요.'
+      return userData;
+    } catch (error) {
+      const newAttempts = loginAttempts + 1;
+      setLoginAttempts(newAttempts);
+      
+      if (newAttempts >= 3) {
+        const blockUntil = new Date(Date.now() + 30000); // 30초
+        setLoginBlockedUntil(blockUntil);
+        throw new Error('로그인 시도가 3회 실패하여 30초 동안 로그인이 제한됩니다.');
       }
-    });
+      throw error;
+    }
   };
 
   const value = {
     user,
-    setUser,
     loading,
-    requireAuth,
-    requireAdmin,
-    handleSessionExpired,
+    login,
+    register: async (userData) => {
+      const response = await authApi.register(userData);
+      const { token, user: newUser } = response.data;
+      setAuthToken(token);
+      setUser(newUser);
+      navigate('/');
+      return newUser;
+    },
+    logout: async () => {
+      try {
+        await authApi.logout();
+      } catch (error) {
+        console.error('로그아웃 실패:', error);
+      } finally {
+        removeAuthToken();
+        setUser(null);
+        navigate('/auth/login');
+      }
+    },
+    loginWithProvider: async (provider) => {
+      const response = await authApi.socialLogin(provider);
+      const { token, user: userData } = response.data;
+      setAuthToken(token);
+      setUser(userData);
+      navigate('/');
+      return userData;
+    },
+    updateProfile: async (userData) => {
+      const response = await authApi.updateProfile(userData);
+      setUser(response.data);
+      return response.data;
+    },
+    changePassword: async (currentPassword, newPassword) => {
+      await authApi.changePassword(currentPassword, newPassword);
+    },
+    requestPasswordReset: async (email) => {
+      await authApi.requestPasswordReset(email);
+    },
+    resetPassword: async (token, newPassword) => {
+      await authApi.resetPassword(token, newPassword);
+    },
+    deleteAccount: async (password, reason) => {
+      await authApi.deleteAccount(password, reason);
+      removeAuthToken();
+      setUser(null);
+      navigate('/auth/login');
+    },
     isAuthenticated: !!user,
     isAdmin: user?.role === 'admin'
   };
